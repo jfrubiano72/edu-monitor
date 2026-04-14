@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EDU Monitor v3 — Análisis de Dominios .edu.co</title>
+<title>EDU Monitor v4 — Análisis de Dominios .edu.co</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#0B2545;--teal:#137DC5;--teal2:#1a9ae0;--gold:#C8963E;--gold2:#e0ab52;
@@ -36,10 +36,12 @@ header{position:sticky;top:0;z-index:50;padding:13px 20px;display:flex;align-ite
 .tab:hover{color:var(--w);background:rgba(255,255,255,.05)}
 .tab.active{color:var(--w);background:rgba(19,125,197,.15);border-color:rgba(255,255,255,.1);border-bottom:2px solid var(--teal)}
 .tab.gtab.active{border-bottom-color:var(--gold);background:rgba(200,150,62,.12)}
+.tab.rtab.active{border-bottom-color:#ef4444;background:rgba(239,68,68,.1)}
 main{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:16px 16px 60px}
 .panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:var(--r);padding:18px 20px;margin-bottom:16px}
 .pt{font-family:var(--fd);font-size:14px;color:var(--gold);margin-bottom:12px}
 .cg2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .fg label{display:block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g4);margin-bottom:5px}
 .fg input,.fg select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);
   border-radius:7px;padding:8px 11px;color:var(--w);font-family:var(--fm);font-size:12px;outline:none;transition:.2s}
@@ -54,6 +56,8 @@ main{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:16px 16p
 .bg:hover{transform:translateY(-1px)}
 .bgh{background:rgba(255,255,255,.06);color:var(--g4);border:1px solid rgba(255,255,255,.12)}
 .bgh:hover{background:rgba(255,255,255,.1);color:var(--w)}
+.bred{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.25)}
+.bred:hover{background:rgba(239,68,68,.25)}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
 .cw{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:16px;font-size:11px;
@@ -61,6 +65,7 @@ main{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:16px 16p
   background:rgba(255,255,255,.04);color:var(--g4);transition:all .18s;user-select:none}
 .chip.on{background:rgba(19,125,197,.18);border-color:var(--teal);color:var(--w)}
 .chip .cd{width:6px;height:6px;border-radius:50%}
+/* KPI */
 .kg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .kc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);
   padding:16px 18px;position:relative;overflow:hidden;transition:.2s}
@@ -77,12 +82,15 @@ main{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:16px 16p
 .up{background:rgba(16,185,129,.15);color:var(--ok)}
 .dn{background:rgba(239,68,68,.15);color:var(--bad)}
 .neu{background:rgba(245,158,11,.12);color:var(--warn)}
-.g23{display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:16px}
+/* GRIDS */
 .g22{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.g23{display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:16px}
 .g33{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.g13{display:grid;grid-template-columns:1fr 3fr;gap:14px;margin-bottom:16px}
 .cc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:16px 18px}
 .cc h3{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g4);margin-bottom:2px}
 .cc h2{font-family:var(--fd);font-size:15px;color:var(--w);margin-bottom:12px}
+/* TABLE */
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead th{padding:8px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:1.5px;
@@ -93,18 +101,14 @@ tbody tr.hl{background:rgba(19,125,197,.09)}
 td{padding:10px;color:var(--w);vertical-align:middle}
 .dc{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:11px}
 .ud{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.mb{height:5px;background:rgba(255,255,255,.07);border-radius:3px;min-width:70px}
+.mb{height:5px;background:rgba(255,255,255,.07);border-radius:3px;min-width:60px}
 .mbf{height:100%;border-radius:3px;transition:width 1.2s ease}
 .tag{display:inline-flex;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
 .hi{background:rgba(16,185,129,.15);color:var(--ok)}
 .md{background:rgba(245,158,11,.14);color:var(--warn)}
 .lo{background:rgba(239,68,68,.14);color:var(--bad)}
 .mn{font-family:var(--fm);font-size:11px;color:var(--g4)}
-.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.sb{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 14px}
-.sl3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g4);margin-bottom:7px}
-.srx{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
-.srx:last-child{border:none}.srx span:first-child{color:var(--g4)}.srx span:last-child{color:var(--w);font-family:var(--fm);font-size:11px}
+/* MISC */
 .ig{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
 .ins{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:13px 14px;display:flex;gap:10px;align-items:flex-start}
 .ins-i{font-size:20px;flex-shrink:0;margin-top:2px}
@@ -120,6 +124,99 @@ td{padding:10px;color:var(--w);vertical-align:middle}
 .note{font-size:11px;color:var(--g4);line-height:1.5;margin-bottom:12px;padding:8px 12px;
   background:rgba(255,255,255,.03);border-left:2px solid var(--teal);border-radius:0 6px 6px 0}
 .note strong{color:var(--teal2)}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.sb{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 14px}
+.sl3{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g4);margin-bottom:7px}
+.srx{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.srx:last-child{border:none}.srx span:first-child{color:var(--g4)}.srx span:last-child{color:var(--w);font-family:var(--fm);font-size:11px}
+/* ── CHANGE DETECTION STYLES ── */
+.baseline-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:16px}
+.bcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden}
+.bcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),transparent)}
+.bcard.has-baseline::before{background:linear-gradient(90deg,var(--ok),var(--teal))}
+.bcard.has-changes::before{background:linear-gradient(90deg,var(--bad),var(--warn))}
+.bc-domain{font-family:var(--fm);font-size:10px;color:var(--g4);margin-bottom:3px}
+.bc-name{font-size:13px;font-weight:700;color:var(--w);margin-bottom:10px}
+.bc-status{display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:11px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-dot.ok{background:var(--ok);box-shadow:0 0 6px rgba(16,185,129,.5)}
+.status-dot.warn{background:var(--warn);box-shadow:0 0 6px rgba(245,158,11,.5)}
+.status-dot.bad{background:var(--bad);box-shadow:0 0 6px rgba(239,68,68,.5)}
+.status-dot.gray{background:var(--g4)}
+.bc-zones{margin-bottom:10px}
+.zone-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.zone-row:last-child{border:none}
+.zone-name{color:var(--g4);display:flex;align-items:center;gap:6px}
+.zone-icon{font-size:13px}
+.zone-change{font-family:var(--fm);font-size:10px;font-weight:700}
+.zone-change.changed{color:var(--bad)}
+.zone-change.stable{color:var(--ok)}
+.zone-change.new{color:var(--warn)}
+.zone-change.unknown{color:var(--g4)}
+.change-pct{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:6px;font-size:10px;font-weight:700}
+.change-pct.high{background:rgba(239,68,68,.15);color:var(--bad)}
+.change-pct.medium{background:rgba(245,158,11,.15);color:var(--warn)}
+.change-pct.low{background:rgba(16,185,129,.15);color:var(--ok)}
+.bc-actions{display:flex;gap:6px;flex-wrap:wrap}
+.bc-btn{font-size:10px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:var(--fb);font-weight:600;border:1px solid;transition:all .15s}
+.bc-btn.primary{background:rgba(19,125,197,.15);border-color:rgba(19,125,197,.3);color:var(--teal2)}
+.bc-btn.primary:hover{background:rgba(19,125,197,.25)}
+.bc-btn.danger{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#fca5a5}
+.bc-btn.danger:hover{background:rgba(239,68,68,.2)}
+.bc-btn.success{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:#6ee7b7}
+/* DIFF VIEWER */
+.diff-modal{position:fixed;inset:0;background:rgba(11,37,69,.95);z-index:150;display:none;
+  flex-direction:column;backdrop-filter:blur(12px)}
+.diff-modal.on{display:flex}
+.diff-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:space-between;background:rgba(11,37,69,.95)}
+.diff-header h2{font-family:var(--fd);font-size:16px;color:var(--w)}
+.diff-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--w);
+  font-size:18px;width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.diff-body{flex:1;overflow-y:auto;padding:20px}
+.diff-meta{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.diff-meta-item{font-size:11px;color:var(--g4);display:flex;align-items:center;gap:5px}
+.diff-meta-item strong{color:var(--w)}
+.zone-diff-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;margin-bottom:12px;overflow:hidden}
+.zone-diff-header{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;user-select:none}
+.zone-diff-header:hover{background:rgba(255,255,255,.03)}
+.zone-diff-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700}
+.zone-diff-body{padding:14px;display:none}
+.zone-diff-body.open{display:block}
+.diff-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.diff-col h4{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--g4);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,.08)}
+.diff-text{font-family:var(--fm);font-size:10px;color:var(--g4);line-height:1.6;
+  background:rgba(0,0,0,.2);border-radius:6px;padding:10px;max-height:160px;overflow-y:auto;
+  white-space:pre-wrap;word-break:break-word}
+.diff-text .added{background:rgba(16,185,129,.2);color:#6ee7b7;border-radius:2px;padding:0 2px}
+.diff-text .removed{background:rgba(239,68,68,.2);color:#fca5a5;border-radius:2px;padding:0 2px;text-decoration:line-through}
+/* CHANGE LOG */
+.changelog{max-height:400px;overflow-y:auto}
+.cl-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.cl-item:last-child{border:none}
+.cl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.cl-content{flex:1}
+.cl-date{font-family:var(--fm);font-size:10px;color:var(--gold);margin-bottom:2px}
+.cl-domain{font-size:12px;font-weight:700;color:var(--w);margin-bottom:3px}
+.cl-zones{display:flex;gap:4px;flex-wrap:wrap}
+.cl-zone-tag{font-size:9px;padding:1px 6px;border-radius:4px;font-weight:600}
+.cl-zone-tag.changed{background:rgba(239,68,68,.15);color:#fca5a5}
+.cl-zone-tag.stable{background:rgba(16,185,129,.15);color:#6ee7b7}
+/* HEATMAP */
+.heatmap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:16px}
+.hm-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px 14px}
+.hm-domain{font-size:10px;color:var(--g4);font-family:var(--fm);margin-bottom:4px}
+.hm-name{font-size:12px;font-weight:700;color:var(--w);margin-bottom:8px}
+.hm-zones{display:flex;flex-direction:column;gap:4px}
+.hm-zone{display:flex;align-items:center;gap:7px;font-size:10px}
+.hm-zone-label{color:var(--g4);width:80px;flex-shrink:0}
+.hm-bar{flex:1;height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden}
+.hm-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.hm-pct{font-family:var(--fm);font-size:9px;color:var(--g4);width:28px;text-align:right}
 /* SNAPSHOTS */
 .snap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-bottom:16px}
 .scard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden}
@@ -133,14 +230,6 @@ td{padding:10px;color:var(--w);vertical-align:middle}
 .sc-acts{display:flex;gap:6px}
 .sc-view{background:rgba(19,125,197,.15);border:1px solid rgba(19,125,197,.3);color:var(--teal2);font-size:10px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:var(--fb);font-weight:600}
 .sc-del{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5;font-size:10px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:var(--fb);font-weight:600}
-/* DELTA */
-.dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-bottom:16px}
-.dcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:14px 16px}
-.dname{font-size:13px;font-weight:700;color:var(--w);margin-bottom:8px}
-.drow{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:11px}
-.drow span:first-child{color:var(--g4)}
-.dv{font-family:var(--fm);font-weight:700}
-.dv.up{color:var(--ok)}.dv.dn{color:var(--bad)}.dv.eq{color:var(--warn)}
 /* REPORT */
 .rp{background:rgba(255,255,255,.98);color:#1a202c;border-radius:var(--r);padding:28px 32px;margin-bottom:16px;font-family:'Plus Jakarta Sans',sans-serif}
 .rp-hdr{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:14px;border-bottom:3px solid #0B2545;margin-bottom:18px}
@@ -152,22 +241,19 @@ td{padding:10px;color:var(--w);vertical-align:middle}
 .rp-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
 .rp-kpi{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;text-align:center;border-top:3px solid #137DC5}
 .rp-kpi .rv{font-size:20px;font-weight:800;color:#0B2545;font-family:Georgia,serif}
-.rp-kpi .rl{font-size:9px;color:#64748b;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:2px}
+.rp-kpi .rl{font-size:9px;color:#64748b;font-weight:600;text-transform:uppercase;margin-top:2px}
 .rp-sec{margin-bottom:16px}
 .rp-sec h3{font-size:11px;font-weight:700;color:#0B2545;margin-bottom:7px;padding-bottom:3px;border-bottom:1px solid #e2e8f0;text-transform:uppercase;letter-spacing:.5px}
 .rp-tbl{width:100%;border-collapse:collapse;font-size:11px}
-.rp-tbl th{background:#0B2545;color:#fff;padding:5px 9px;text-align:left;font-size:9px;letter-spacing:.5px}
+.rp-tbl th{background:#0B2545;color:#fff;padding:5px 9px;text-align:left;font-size:9px}
 .rp-tbl td{padding:6px 9px;border-bottom:1px solid #f1f5f9;color:#374151}
 .rp-tbl tr:nth-child(even) td{background:#f8fafc}
 .rp-tbl tr.mr td{background:#EFF6FF;font-weight:700;color:#1e40af}
 .dp{color:#059669;font-weight:700}.dn2{color:#dc2626;font-weight:700}.dq{color:#d97706;font-weight:700}
 .rp-ins{background:#f0f9ff;border-left:3px solid #137DC5;padding:9px 11px;margin-bottom:7px;border-radius:0 6px 6px 0;font-size:11px;color:#1e40af;line-height:1.5}
 .rp-ftr{margin-top:18px;padding-top:10px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;font-size:10px;color:#94a3b8}
-/* EMPTY */
-.empty{text-align:center;padding:40px 20px;color:var(--g4)}
-.empty .ei{font-size:40px;opacity:.32;margin-bottom:12px}
-.empty h3{font-family:var(--fd);font-size:16px;margin-bottom:6px;color:var(--g4)}
-.empty p{font-size:12px;max-width:300px;margin:0 auto;line-height:1.6}
+.rp-zone-bar{height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden;margin-top:4px}
+.rp-zone-fill{height:100%;border-radius:5px}
 /* LOADING */
 #ov{position:fixed;inset:0;background:rgba(11,37,69,.94);z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;backdrop-filter:blur(10px)}
 #ov.on{display:flex}
@@ -176,26 +262,41 @@ td{padding:10px;color:var(--w);vertical-align:middle}
 #lm{font-family:var(--fm);font-size:12px;color:var(--g4)}
 .pb2{width:220px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
 .pb2f{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;transition:width .35s ease;width:0}
-#toast{position:fixed;bottom:18px;right:18px;border-radius:10px;padding:11px 16px;font-size:12px;max-width:320px;z-index:300;display:none;backdrop-filter:blur(8px)}
+#toast{position:fixed;bottom:18px;right:18px;border-radius:10px;padding:11px 16px;font-size:12px;max-width:340px;z-index:300;display:none;backdrop-filter:blur(8px)}
 #toast.on{display:block;animation:si .3s ease}
 .ok-t{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#6ee7b7}
 .err-t{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
 @keyframes si{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:768px){.kg{grid-template-columns:1fr 1fr}.g23,.g22,.g33{grid-template-columns:1fr}.sg{grid-template-columns:1fr}.ig{grid-template-columns:1fr}.cg2{grid-template-columns:1fr}.rp-kpis{grid-template-columns:1fr 1fr}}
+.empty{text-align:center;padding:40px 20px;color:var(--g4)}
+.empty .ei{font-size:40px;opacity:.32;margin-bottom:12px}
+.empty h3{font-family:var(--fd);font-size:16px;margin-bottom:6px;color:var(--g4)}
+.empty p{font-size:12px;max-width:300px;margin:0 auto;line-height:1.6}
+@media(max-width:768px){.kg{grid-template-columns:1fr 1fr}.g22,.g23,.g33,.g13{grid-template-columns:1fr}.sg{grid-template-columns:1fr}.ig{grid-template-columns:1fr}.cg2,.cg3{grid-template-columns:1fr}.diff-columns{grid-template-columns:1fr}.rp-kpis{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
+
+<!-- LOADING -->
 <div id="ov"><div class="sp"></div><div id="lm">Iniciando...</div>
   <div class="pb2"><div class="pb2f" id="pf"></div></div>
   <div id="ls" style="font-size:10px;color:var(--g4);font-family:var(--fm);text-align:center;max-width:280px;margin-top:4px"></div>
 </div>
 <div id="toast"></div>
 
+<!-- DIFF MODAL -->
+<div class="diff-modal" id="diffModal">
+  <div class="diff-header">
+    <h2 id="diffTitle">Análisis de Cambios</h2>
+    <button class="diff-close" onclick="closeDiff()">✕</button>
+  </div>
+  <div class="diff-body" id="diffBody"></div>
+</div>
+
 <header>
   <div class="brand"><div class="bi">🎓</div>
     <div><h1>EDU Monitor</h1><p>Dominios · Colombia · .edu.co</p></div>
   </div>
-  <div class="hr"><span class="vbadge">v3</span><div class="ld"></div>
+  <div class="hr"><span class="vbadge">v4</span><div class="ld"></div>
     <span id="lu" style="display:none;font-size:10px">—</span>
     <span id="scnt" style="font-size:10px;color:var(--gold)"></span>
   </div>
@@ -206,17 +307,19 @@ td{padding:10px;color:var(--w);vertical-align:middle}
   <div class="tab" onclick="st('res')">📊 Resumen</div>
   <div class="tab" onclick="st('cmp')">🏆 Comparativa</div>
   <div class="tab" onclick="st('est')">📈 Estadísticas</div>
+  <div class="tab rtab" onclick="st('chg')">🔍 Cambios</div>
   <div class="tab gtab" onclick="st('snp')">💾 Historial</div>
   <div class="tab gtab" onclick="st('rep')">📋 Reporte</div>
 </div>
 
 <main>
-<!-- CONFIG -->
+
+<!-- ═══ CONFIG ═══ -->
 <div id="p-cfg"><div style="height:14px"></div>
   <div class="panel"><div class="pt">🎯 Dominio Principal</div>
     <div class="cg2">
-      <div class="fg"><label>Dominio</label><input id="md" value="unisalle.edu.co"></div>
-      <div class="fg"><label>Período</label>
+      <div class="fg"><label>Dominio Principal</label><input id="md" value="unisalle.edu.co"></div>
+      <div class="fg"><label>Período de Análisis</label>
         <select id="per">
           <option value="30">Últimos 30 días</option>
           <option value="90" selected>Últimos 90 días</option>
@@ -235,15 +338,15 @@ td{padding:10px;color:var(--w);vertical-align:middle}
       <button class="btn bgh" id="btnC" onclick="expCSV()" disabled>📥 CSV</button>
     </div>
   </div>
-  <div class="note"><strong>Nuevo en v3:</strong> Guarda un snapshot después de cada análisis. La app acumula historial en tu navegador y genera reportes comparativos semanales y mensuales. Los datos persisten entre sesiones sin necesidad de servidor.</div>
+  <div class="note"><strong>v4 — Detección de Cambios:</strong> La pestaña 🔍 <strong>Cambios</strong> captura una "foto inicial" (baseline) del contenido real de cada sitio usando la Wayback Machine y detecta qué zonas específicas cambiaron: Inicio, Programas, Noticias, Admisiones, Investigación, Footer. Registra el historial completo de cambios.</div>
   <div id="cfg-ss"></div>
 </div>
 
-<!-- RESUMEN -->
+<!-- ═══ RESUMEN ═══ -->
 <div id="p-res" style="display:none"><div style="height:14px"></div>
   <div class="kg">
     <div class="kc ct"><div class="kl">Primera Captura</div><div class="kv" id="k1">—</div><div class="ks" id="k1s">—</div></div>
-    <div class="kc cgo"><div class="kl">Capturas Totales</div><div class="kv" id="k2">—</div><div class="ks" id="k2s">en el período</div></div>
+    <div class="kc cgo"><div class="kl">Capturas Totales</div><div class="kv" id="k2">—</div><div class="ks">en el período</div></div>
     <div class="kc cok"><div class="kl">Promedio Semanal</div><div class="kv" id="k3">—</div><div class="ks">capturas / semana</div></div>
     <div class="kc cw2"><div class="kl">Posición vs. Comp.</div><div class="kv" id="k4">—</div><div class="ks" id="k4s">—</div></div>
   </div>
@@ -259,7 +362,7 @@ td{padding:10px;color:var(--w);vertical-align:middle}
   <div class="ig" id="igrid"></div>
 </div>
 
-<!-- COMPARATIVA -->
+<!-- ═══ COMPARATIVA ═══ -->
 <div id="p-cmp" style="display:none"><div style="height:14px"></div>
   <div class="g22">
     <div class="cc"><h3>Ranking Total</h3><h2>Capturas por Institución</h2><canvas id="cRk" height="280"></canvas></div>
@@ -272,7 +375,7 @@ td{padding:10px;color:var(--w);vertical-align:middle}
   </div></div>
 </div>
 
-<!-- ESTADÍSTICAS -->
+<!-- ═══ ESTADÍSTICAS ═══ -->
 <div id="p-est" style="display:none"><div style="height:14px"></div>
   <div class="sdiv"><h2>📐 Estadística Descriptiva — <span id="lm2">—</span></h2></div>
   <div class="sg" id="statg"></div>
@@ -287,15 +390,68 @@ td{padding:10px;color:var(--w);vertical-align:middle}
   </div>
 </div>
 
-<!-- HISTORIAL -->
+<!-- ═══ CAMBIOS ═══ -->
+<div id="p-chg" style="display:none"><div style="height:14px"></div>
+
+  <div class="panel">
+    <div class="pt">📸 Control de Cambios por Zona</div>
+    <div class="cg3">
+      <div class="fg"><label>Dominio a Inspeccionar</label>
+        <select id="chgDomain"></select>
+      </div>
+      <div class="fg"><label>Fecha Baseline (captura inicial)</label>
+        <select id="baseDate"></select>
+      </div>
+      <div class="fg"><label>Fecha de Comparación</label>
+        <select id="compDate"></select>
+      </div>
+    </div>
+    <div class="br">
+      <button class="btn bt" onclick="captureBaseline()">📸 Capturar Foto Inicial (Baseline)</button>
+      <button class="btn bg" id="btnCompare" onclick="comparePages()" disabled>🔍 Comparar Cambios</button>
+      <button class="btn bgh" onclick="exportChangeLog()">📥 Exportar Registro</button>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Cómo funciona:</strong> Selecciona un dominio y dos fechas de captura de Wayback Machine. La app descarga el HTML real de ambas versiones y analiza zona por zona qué cambió: Inicio, Programas, Noticias/Blog, Admisiones, Investigación, Contacto y Footer. Registra cada análisis automáticamente.
+  </div>
+
+  <!-- Estado de baselines -->
+  <div class="sdiv"><h2>📋 Estado de Baselines por Institución</h2></div>
+  <div class="baseline-grid" id="baselineGrid"></div>
+
+  <!-- Mapa de calor de cambios -->
+  <div id="hmSection" style="display:none">
+    <div class="sdiv"><h2>🌡️ Mapa de Calor — Zonas más Cambiantes</h2></div>
+    <div class="heatmap-grid" id="hmGrid"></div>
+  </div>
+
+  <!-- Gráficos de cambios -->
+  <div id="chgCharts" style="display:none">
+    <div class="g22">
+      <div class="cc"><h3>Actividad de Cambios</h3><h2>Zonas Modificadas por Dominio</h2><canvas id="cChgBar" height="260"></canvas></div>
+      <div class="cc"><h3>Distribución de Cambios</h3><h2>Qué Zona Cambia Más</h2><canvas id="cChgPie" height="260"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Registro cronológico -->
+  <div class="sdiv"><h2>📅 Registro Cronológico de Cambios</h2></div>
+  <div class="cc"><div class="changelog" id="changelog">
+    <div class="empty" style="padding:24px"><div class="ei">🔍</div>
+      <p>Captura una foto inicial y luego compara para ver el registro de cambios aquí.</p></div>
+  </div></div>
+</div>
+
+<!-- ═══ HISTORIAL ═══ -->
 <div id="p-snp" style="display:none"><div style="height:14px"></div>
   <div id="delta-sec" style="display:none">
     <div class="sdiv"><h2>📊 Comparativo entre Snapshots</h2></div>
-    <div class="note">Variación entre el snapshot más reciente y el anterior. <strong style="color:var(--ok)">Verde = crecimiento</strong> · <strong style="color:var(--bad)">Rojo = descenso</strong></div>
-    <div class="dg" id="dg"></div>
+    <div class="note">Variación entre el snapshot más reciente y el anterior.</div>
+    <div id="dg" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-bottom:16px"></div>
     <div class="g22">
-      <div class="cc"><h3>Evolución de Snapshots</h3><h2>Capturas Totales — <span id="snlbl">—</span></h2><canvas id="cSE" height="220"></canvas></div>
-      <div class="cc"><h3>Promedio Semanal por Snapshot</h3><h2>Evolución Histórica Comparada</h2><canvas id="cSR" height="220"></canvas></div>
+      <div class="cc"><h3>Evolución Capturas</h3><h2>Total — <span id="snlbl">—</span></h2><canvas id="cSE" height="220"></canvas></div>
+      <div class="cc"><h3>Prom. Semanal por Snapshot</h3><h2>Evolución Histórica</h2><canvas id="cSR" height="220"></canvas></div>
     </div>
   </div>
   <div class="sdiv"><h2>💾 Snapshots Guardados
@@ -303,32 +459,40 @@ td{padding:10px;color:var(--w);vertical-align:middle}
   </h2></div>
   <div class="snap-grid" id="sg"></div>
   <div class="empty" id="semp" style="display:none"><div class="ei">💾</div><h3>Sin snapshots</h3>
-    <p>Ejecuta un análisis y presiona <strong style="color:var(--gold)">Guardar Snapshot</strong> para acumular historial semanal y mensual.</p></div>
+    <p>Ejecuta un análisis y presiona <strong style="color:var(--gold)">Guardar Snapshot</strong>.</p></div>
 </div>
 
-<!-- REPORTE -->
+<!-- ═══ REPORTE ═══ -->
 <div id="p-rep" style="display:none"><div style="height:14px"></div>
   <div class="panel"><div class="pt">📋 Generador de Reportes</div>
     <div class="cg2">
       <div class="fg"><label>Tipo de Reporte</label>
-        <select id="rtype"><option value="weekly">Reporte Semanal</option><option value="monthly">Reporte Mensual</option><option value="comparison">Comparativo de Períodos</option></select>
+        <select id="rtype">
+          <option value="weekly">Reporte Semanal</option>
+          <option value="monthly">Reporte Mensual</option>
+          <option value="changes">Reporte de Cambios Web</option>
+        </select>
       </div>
       <div class="fg"><label>Datos Base</label>
-        <select id="rsnap"><option value="current">Análisis actual (en memoria)</option></select>
+        <select id="rsnap"><option value="current">Análisis actual</option></select>
       </div>
     </div>
     <div class="br">
       <button class="btn bt" onclick="genRep()">📋 Generar Reporte</button>
       <button class="btn bg" id="btnPr" onclick="printRep()" disabled>🖨️ Imprimir / PDF</button>
-      <button class="btn bgh" id="btnRC" onclick="repCSV()" disabled>📥 Exportar CSV</button>
+      <button class="btn bgh" id="btnRC" onclick="repCSV()" disabled>📥 CSV</button>
     </div>
   </div>
   <div id="repArea"></div>
 </div>
+
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
+// ══════════════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════════════
 const UNIS=[
   {d:'uniandes.edu.co',   n:'Uniandes',          c:'#1a9ae0',on:true},
   {d:'urosario.edu.co',   n:'U. Rosario',         c:'#C8963E',on:true},
@@ -343,15 +507,33 @@ const UNIS=[
   {d:'uniminuto.edu.co',  n:'Uniminuto',          c:'#f87171',on:true},
   {d:'ecci.edu.co',       n:'U. ECCI',            c:'#a3e635',on:false},
 ];
+
+// Zones to detect in HTML content
+const ZONES=[
+  {id:'home',   label:'Inicio/Home',    icon:'🏠', keywords:['hero','banner','slider','carousel','portada','bienvenid','home']},
+  {id:'prog',   label:'Programas',      icon:'🎓', keywords:['program','carrera','facultad','pregrado','posgrado','maestria','doctorado','especializacion']},
+  {id:'news',   label:'Noticias/Blog',  icon:'📰', keywords:['noticia','news','blog','novedad','evento','actualidad','comunicado']},
+  {id:'adm',    label:'Admisiones',     icon:'📋', keywords:['admision','inscripcion','matricula','ingreso','aspirante','convocatoria']},
+  {id:'inv',    label:'Investigación',  icon:'🔬', keywords:['investigacion','research','grupo','semillero','publicacion','ciencia']},
+  {id:'contact',label:'Contacto',       icon:'📞', keywords:['contacto','contact','telefono','direccion','email','sede','campus']},
+  {id:'footer', label:'Footer/Pie',     icon:'⬇️', keywords:['footer','pie','redes','social','facebook','instagram','twitter','linkedin']},
+];
+
 const PX=[
   u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
   u=>`https://thingproxy.freeboard.io/fetch/${u}`,
 ];
 const LSK='edu_monitor_v3';
-let S={},CH={},ran=false,curRep=null;
+const LSK_BL='edu_monitor_v4_baselines';
+const LSK_CL='edu_monitor_v4_changelog';
 
+let S={}, CH={}, ran=false, curRep=null;
+let BASELINES={}, CHANGELOG=[];
+
+// ══════════════════════════════════════════════════════
 // INIT
+// ══════════════════════════════════════════════════════
 (function(){
   const w=document.getElementById('cw');
   UNIS.forEach(u=>{
@@ -361,20 +543,29 @@ let S={},CH={},ran=false,curRep=null;
     c.onclick=()=>c.classList.toggle('on');
     w.appendChild(c);
   });
+  // Load persisted data
+  try{BASELINES=JSON.parse(localStorage.getItem(LSK_BL)||'{}');}catch(e){BASELINES={};}
+  try{CHANGELOG=JSON.parse(localStorage.getItem(LSK_CL)||'[]');}catch(e){CHANGELOG=[];}
   updSnUI();
+  populateChgDomains();
 })();
 
+// ══════════════════════════════════════════════════════
 // TABS
+// ══════════════════════════════════════════════════════
 function st(n){
-  ['cfg','res','cmp','est','snp','rep'].forEach(t=>document.getElementById('p-'+t).style.display='none');
+  ['cfg','res','cmp','est','chg','snp','rep'].forEach(t=>document.getElementById('p-'+t).style.display='none');
   document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
   document.getElementById('p-'+n).style.display='block';
   document.querySelectorAll('.tab').forEach(e=>{if(e.getAttribute('onclick')===`st('${n}')`)e.classList.add('active');});
-  if(n==='snp')renSnaps();
-  if(n==='rep')updRepSel();
+  if(n==='snp') renSnaps();
+  if(n==='rep') updRepSel();
+  if(n==='chg') renBaselineGrid();
 }
 
-// FETCH
+// ══════════════════════════════════════════════════════
+// CDX FETCH
+// ══════════════════════════════════════════════════════
 async function fCDX(domain,from,to){
   const base=`https://web.archive.org/cdx/search/cdx?url=${domain}&output=json&fl=timestamp,statuscode&from=${from}&to=${to}&limit=5000&filter=statuscode:200`;
   const urls=[base,...PX.map(p=>p(base))];
@@ -392,23 +583,60 @@ async function fCDX(domain,from,to){
   }
   return[];
 }
+
+// Fetch list of available timestamps for a domain
+async function fTimestamps(domain){
+  const base=`https://web.archive.org/cdx/search/cdx?url=${domain}&output=json&fl=timestamp&limit=20&filter=statuscode:200&output=json`;
+  const urls=[base,...PX.map(p=>p(base))];
+  for(let i=0;i<urls.length;i++){
+    try{
+      const r=await fetch(urls[i],{signal:AbortSignal.timeout(12000)});
+      if(!r.ok)continue;
+      const txt=await r.text();
+      if(!txt||txt.includes('<html'))continue;
+      const j=JSON.parse(txt);
+      if(j[0]&&j[0][0]==='timestamp')j.shift();
+      return j.map(row=>row[0]).filter(Boolean);
+    }catch(e){continue;}
+  }
+  return[];
+}
+
+// Fetch actual HTML content from Wayback Machine
+async function fWaybackHTML(domain, timestamp){
+  const waybackUrl=`https://web.archive.org/web/${timestamp}/${domain}`;
+  const urls=[waybackUrl,...PX.map(p=>p(waybackUrl))];
+  for(let i=0;i<urls.length;i++){
+    try{
+      const r=await fetch(urls[i],{signal:AbortSignal.timeout(20000)});
+      if(!r.ok)continue;
+      const txt=await r.text();
+      if(txt && txt.length>500) return txt;
+    }catch(e){continue;}
+  }
+  return null;
+}
+
 function dr(days){
   const to=new Date(),from=new Date();from.setDate(from.getDate()-days);
   const f=d=>d.toISOString().replace(/[-:T]/g,'').slice(0,8);
   return{from:f(from),to:f(to)};
 }
 
-// PROCESS
+// ══════════════════════════════════════════════════════
+// PROCESS CDX DATA
+// ══════════════════════════════════════════════════════
 function proc(rows,days){
   if(!rows||!rows.length)return{total:0,dailyAvg:0,weeklyAvg:0,byWeek:{},byDow:[0,0,0,0,0,0,0],
     byMonth:{},byHour:Array(24).fill(0),events:[],first:null,last:null,weekKeys:[],weekVals:[],
-    stats:{mean:0,std:0,median:0,max:0,min:0,cv:0,n:0,slope:0},trend:[],deltas:[],ma4:[]};
-  const bw={},bd=[0,0,0,0,0,0,0],bm={},bh=Array(24).fill(0),ev=[];
+    stats:{mean:0,std:0,median:0,max:0,min:0,cv:0,n:0,slope:0},trend:[],deltas:[],ma4:[],timestamps:[]};
+  const bw={},bd=[0,0,0,0,0,0,0],bm={},bh=Array(24).fill(0),ev=[],ts=[];
   rows.forEach(r=>{
-    const ts=r[0],y=ts.slice(0,4),mo=ts.slice(4,6),d=ts.slice(6,8),h=+ts.slice(8,10);
+    const t=r[0],y=t.slice(0,4),mo=t.slice(4,6),d=t.slice(6,8),h=+t.slice(8,10);
     const dt=new Date(`${y}-${mo}-${d}`);
     bw[wk(dt)]=(bw[wk(dt)]||0)+1;bd[dt.getDay()]++;bm[`${y}-${mo}`]=(bm[`${y}-${mo}`]||0)+1;bh[h]++;
-    ev.push({ts,dateStr:`${d}/${mo}/${y}`,dateObj:dt});
+    ev.push({ts:t,dateStr:`${d}/${mo}/${y}`,dateObj:dt});
+    ts.push(t);
   });
   const srt=ev.sort((a,b)=>a.ts.localeCompare(b.ts));
   const wks=Object.keys(bw).sort(),wv=wks.map(w=>bw[w]),tot=rows.length;
@@ -424,19 +652,22 @@ function proc(rows,days){
   return{total:tot,dailyAvg:+(tot/days).toFixed(2),weeklyAvg:+(tot/(days/7)).toFixed(1),
     byWeek:bw,byDow:bd,byMonth:bm,byHour:bh,events:srt.slice(-30).reverse(),
     first:srt[0]?.dateStr||null,last:srt[srt.length-1]?.dateStr||null,
-    weekKeys:wks,weekVals:wv,
+    weekKeys:wks,weekVals:wv,timestamps:ts.slice(-20),
     stats:{mean:+mean.toFixed(2),std:+std.toFixed(2),median:med,max:mx,min:mn2,cv:+cv.toFixed(1),n,slope:+slope.toFixed(3)},
     trend:wv.map((_,i)=>+(ic+slope*i).toFixed(1)),
     deltas:wv.map((v,i)=>i===0?0:+((v-(wv[i-1]||1))/(wv[i-1]||1)*100).toFixed(1)),
     ma4:wv.map((_,i)=>{const sl=wv.slice(Math.max(0,i-3),i+1);return+(sl.reduce((a,b)=>a+b,0)/sl.length).toFixed(1);})};
 }
+
 function wk(d){
   const dt=new Date(d);dt.setHours(0,0,0,0);dt.setDate(dt.getDate()+4-(dt.getDay()||7));
   const ys=new Date(dt.getFullYear(),0,1),wn=Math.ceil((((dt-ys)/86400000)+1)/7);
   return`${dt.getFullYear()}-S${String(wn).padStart(2,'0')}`;
 }
 
-// RUN
+// ══════════════════════════════════════════════════════
+// RUN ANALYSIS
+// ══════════════════════════════════════════════════════
 async function run(){
   const main=document.getElementById('md').value.trim(),days=+document.getElementById('per').value;
   const comps=[...document.querySelectorAll('#cw .chip.on')].map(c=>c.dataset.d);
@@ -456,13 +687,465 @@ async function run(){
     const lu=document.getElementById('lu');
     lu.textContent='Actualizado: '+new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
     lu.style.display='block';
+    populateChgDomains();
     st('res');
-    toast('✅ Análisis completo. Presiona 💾 Guardar Snapshot.','ok');
+    toast('✅ Análisis completo. Usa la pestaña 🔍 Cambios para detectar zonas modificadas.','ok');
   }catch(e){toast('Error: '+e.message,'e');}
   finally{ov(false);}
 }
 
+// ══════════════════════════════════════════════════════
+// CHANGE DETECTION — CORE FUNCTIONS
+// ══════════════════════════════════════════════════════
+
+function extractZones(html){
+  if(!html) return {};
+  const parser=new DOMParser();
+  const doc=parser.parseFromString(html,'text/html');
+  // Remove scripts, styles, wayback toolbar
+  ['script','style','#wm-ipp','#wm-ipp-base'].forEach(sel=>{
+    doc.querySelectorAll(sel).forEach(el=>el.remove());
+  });
+  const fullText=doc.body?.innerText||doc.body?.textContent||'';
+  const zones={};
+  ZONES.forEach(z=>{
+    // Find relevant sections by keywords
+    let content='';
+    // Try semantic elements first
+    const selectors=['main','article','section','[class*="'+z.id+'"]','[id*="'+z.id+'"]'];
+    z.keywords.forEach(kw=>{
+      const els=doc.querySelectorAll(`[class*="${kw}"],[id*="${kw}"],section`);
+      els.forEach(el=>{
+        const txt=(el.innerText||el.textContent||'').toLowerCase();
+        if(txt.includes(kw.toLowerCase())) content+=txt.slice(0,500);
+      });
+    });
+    // Fallback: extract lines containing keywords from full text
+    if(!content){
+      const lines=fullText.split('\n').filter(l=>z.keywords.some(kw=>l.toLowerCase().includes(kw)));
+      content=lines.slice(0,30).join(' ');
+    }
+    zones[z.id]=content.replace(/\s+/g,' ').trim().slice(0,2000);
+  });
+  return zones;
+}
+
+function fingerprint(text){
+  // Simple hash for change detection
+  let h=0;
+  for(let i=0;i<text.length;i++){h=((h<<5)-h)+text.charCodeAt(i);h|=0;}
+  return h;
+}
+
+function compareZones(baseZones, newZones){
+  const result={};
+  ZONES.forEach(z=>{
+    const base=baseZones[z.id]||'';
+    const curr=newZones[z.id]||'';
+    const bHash=fingerprint(base);
+    const cHash=fingerprint(curr);
+    const changed=bHash!==cHash;
+    // Calculate similarity %
+    const similarity=base&&curr?calcSimilarity(base,curr):0;
+    const changePct=Math.round((1-similarity)*100);
+    result[z.id]={
+      changed,
+      changePct,
+      level: changePct>40?'high':changePct>15?'medium':'low',
+      baseSnippet:base.slice(0,300),
+      currSnippet:curr.slice(0,300),
+      baseWords:new Set(base.toLowerCase().split(/\s+/)).size,
+      currWords:new Set(curr.toLowerCase().split(/\s+/)).size,
+    };
+  });
+  return result;
+}
+
+function calcSimilarity(a,b){
+  const wa=new Set(a.toLowerCase().split(/\s+/).filter(w=>w.length>3));
+  const wb=new Set(b.toLowerCase().split(/\s+/).filter(w=>w.length>3));
+  if(!wa.size&&!wb.size) return 1;
+  const intersection=new Set([...wa].filter(x=>wb.has(x)));
+  const union=new Set([...wa,...wb]);
+  return union.size?intersection.size/union.size:0;
+}
+
+function populateChgDomains(){
+  const sel=document.getElementById('chgDomain');
+  const all=[document.getElementById('md').value||'unisalle.edu.co',
+    ...[...document.querySelectorAll('#cw .chip.on')].map(c=>c.dataset.d)];
+  const unique=[...new Set(all)];
+  sel.innerHTML=unique.map(d=>`<option value="${d}">${d}</option>`).join('');
+  sel.onchange=()=>loadTimestamps(sel.value);
+  if(unique.length) loadTimestamps(unique[0]);
+}
+
+async function loadTimestamps(domain){
+  const bd=document.getElementById('baseDate'),cd=document.getElementById('compDate');
+  bd.innerHTML='<option>Cargando capturas...</option>';
+  cd.innerHTML='<option>Cargando capturas...</option>';
+  try{
+    // Use stored timestamps from S if available
+    let ts=S[domain]?.timestamps||[];
+    if(!ts.length){
+      const{from,to}=dr(90);
+      const base=`https://web.archive.org/cdx/search/cdx?url=${domain}&output=json&fl=timestamp&limit=15&filter=statuscode:200&from=${from}&to=${to}`;
+      for(const url of [base,...PX.map(p=>p(base))]){
+        try{const r=await fetch(url,{signal:AbortSignal.timeout(10000)});if(!r.ok)continue;
+          const txt=await r.text();if(!txt||txt.includes('<html'))continue;
+          const j=JSON.parse(txt);if(j[0]&&j[0][0]==='timestamp')j.shift();
+          ts=j.map(x=>x[0]).filter(Boolean);break;}catch(e){continue;}
+      }
+    }
+    if(ts.length<2){
+      bd.innerHTML='<option>Sin capturas disponibles</option>';
+      cd.innerHTML='<option>Sin capturas disponibles</option>';
+      return;
+    }
+    const opts=ts.map(t=>{
+      const y=t.slice(0,4),mo=t.slice(4,6),d=t.slice(6,8),h=t.slice(8,10),m=t.slice(10,12);
+      return`<option value="${t}">${d}/${mo}/${y} ${h}:${m}</option>`;
+    }).join('');
+    bd.innerHTML=opts;
+    cd.innerHTML=opts;
+    // Default: oldest for baseline, newest for comparison
+    bd.selectedIndex=ts.length-1;
+    cd.selectedIndex=0;
+    document.getElementById('btnCompare').disabled=false;
+  }catch(e){
+    bd.innerHTML='<option>Error al cargar</option>';
+    cd.innerHTML='<option>Error al cargar</option>';
+  }
+}
+
+async function captureBaseline(){
+  const domain=document.getElementById('chgDomain').value;
+  const ts=document.getElementById('baseDate').value;
+  if(!ts){toast('Selecciona una fecha baseline','e');return;}
+  ov(true);sp(10);sLM(`Capturando foto inicial de ${domain}...`);
+  try{
+    sp(30);
+    const html=await fWaybackHTML(domain,ts);
+    if(!html){
+      toast('No se pudo obtener el HTML de esa captura. Prueba otra fecha.','e');
+      return;
+    }
+    sp(70);sLM('Extrayendo zonas...');
+    const zones=extractZones(html);
+    const now=new Date();
+    BASELINES[domain]={
+      timestamp:ts,
+      captureDate:fmtTS(ts),
+      savedAt:now.toISOString(),
+      savedLabel:now.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+      zones,
+      htmlSize:html.length,
+      zoneCount:Object.values(zones).filter(z=>z.length>50).length,
+    };
+    localStorage.setItem(LSK_BL,JSON.stringify(BASELINES));
+    sp(100);
+    toast(`📸 Foto inicial capturada para ${domain}. ${Object.values(zones).filter(z=>z.length>50).length} zonas detectadas.`,'ok');
+    renBaselineGrid();
+  }catch(e){toast('Error: '+e.message,'e');}
+  finally{ov(false);}
+}
+
+async function comparePages(){
+  const domain=document.getElementById('chgDomain').value;
+  const baseTS=document.getElementById('baseDate').value;
+  const compTS=document.getElementById('compDate').value;
+  if(!BASELINES[domain]){toast('Captura primero una foto inicial (baseline)','e');return;}
+  if(baseTS===compTS){toast('Selecciona fechas diferentes','e');return;}
+  ov(true);sp(10);sLM(`Obteniendo versión de ${domain}...`);
+  try{
+    sp(25);
+    const newHtml=await fWaybackHTML(domain,compTS);
+    if(!newHtml){toast('No se pudo obtener el HTML de comparación. Prueba otra fecha.','e');return;}
+    sp(60);sLM('Analizando cambios por zona...');
+    const newZones=extractZones(newHtml);
+    const diff=compareZones(BASELINES[domain].zones,newZones);
+    // Save to changelog
+    const now=new Date();
+    const entry={
+      id:Date.now(),
+      domain,
+      date:now.toISOString(),
+      dateLabel:now.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+      baselineTS:BASELINES[domain].timestamp,
+      baselineDate:BASELINES[domain].captureDate,
+      compTS,
+      compDate:fmtTS(compTS),
+      diff,
+      changedZones:Object.entries(diff).filter(([,v])=>v.changed).map(([k])=>k),
+      totalChangePct:Math.round(Object.values(diff).reduce((s,v)=>s+v.changePct,0)/ZONES.length),
+    };
+    CHANGELOG.unshift(entry);
+    if(CHANGELOG.length>100) CHANGELOG.pop();
+    localStorage.setItem(LSK_CL,JSON.stringify(CHANGELOG));
+    // Update baselines with last check info
+    BASELINES[domain].lastCheck={ts:compTS,date:fmtTS(compTS),diff,changedZones:entry.changedZones};
+    localStorage.setItem(LSK_BL,JSON.stringify(BASELINES));
+    sp(100);
+    renBaselineGrid();
+    renChangelog();
+    renHeatmap();
+    renChangeCharts();
+    showDiff(domain,entry);
+    toast(`✅ Comparación completada. ${entry.changedZones.length} zonas con cambios detectadas.`,'ok');
+  }catch(e){toast('Error: '+e.message,'e');}
+  finally{ov(false);}
+}
+
+function fmtTS(ts){
+  if(!ts||ts.length<8)return ts;
+  return`${ts.slice(6,8)}/${ts.slice(4,6)}/${ts.slice(0,4)} ${ts.slice(8,10)}:${ts.slice(10,12)}`;
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER CHANGE DETECTION UI
+// ══════════════════════════════════════════════════════
+function renBaselineGrid(){
+  const g=document.getElementById('baselineGrid');g.innerHTML='';
+  const allDomains=Object.keys(S).length?Object.keys(S):UNIS.filter(u=>u.on).map(u=>u.d);
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n;
+  const uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
+
+  allDomains.forEach(domain=>{
+    const bl=BASELINES[domain];
+    const lc=bl?.lastCheck;
+    const hasChanges=lc&&lc.changedZones?.length>0;
+    const card=document.createElement('div');
+    card.className='bcard'+(bl?' has-baseline':'')+(hasChanges?' has-changes':'');
+
+    let zonesHtml='';
+    if(lc?.diff){
+      ZONES.forEach(z=>{
+        const zd=lc.diff[z.id];if(!zd)return;
+        const cls=zd.changed?`changed`:zd.changePct===0?'stable':'unknown';
+        const pctTag=zd.changed?`<span class="change-pct ${zd.level}">${zd.changePct}%</span>`:'';
+        zonesHtml+=`<div class="zone-row">
+          <span class="zone-name"><span class="zone-icon">${z.icon}</span>${z.label}</span>
+          <span class="zone-change ${cls}">${zd.changed?'✦ Cambió':'✓ Sin cambios'} ${pctTag}</span>
+        </div>`;
+      });
+    }else if(bl){
+      ZONES.forEach(z=>{
+        const has=(bl.zones[z.id]||'').length>50;
+        zonesHtml+=`<div class="zone-row">
+          <span class="zone-name"><span class="zone-icon">${z.icon}</span>${z.label}</span>
+          <span class="zone-change ${has?'stable':'unknown'}">${has?'✓ En baseline':'— Sin datos'}</span>
+        </div>`;
+      });
+    }
+
+    card.innerHTML=`
+      <div class="bc-domain">${domain}</div>
+      <div class="bc-name">${un(domain)}</div>
+      <div class="bc-status">
+        <div class="status-dot ${bl?(hasChanges?'bad':'ok'):'gray'}"></div>
+        <span>${bl?(hasChanges?`⚠️ ${lc.changedZones.length} zonas cambiaron`:`✅ Sin cambios vs. baseline`):'Sin baseline capturado'}</span>
+      </div>
+      ${bl?`<div style="font-size:10px;color:var(--g4);margin-bottom:8px">📸 Baseline: ${bl.captureDate} · ${bl.zoneCount} zonas</div>`:''}
+      ${lc?`<div style="font-size:10px;color:var(--g4);margin-bottom:8px">🔍 Última comparación: ${lc.date}</div>`:''}
+      <div class="bc-zones">${zonesHtml||'<div style="font-size:11px;color:var(--g4);padding:4px 0">Captura un baseline para ver el estado de las zonas.</div>'}</div>
+      <div class="bc-actions">
+        ${bl?`<button class="bc-btn success" onclick="showBaselineInfo('${domain}')">📊 Ver info</button>`:''}
+        ${bl&&lc?`<button class="bc-btn primary" onclick="showLastDiff('${domain}')">🔍 Ver diff</button>`:''}
+        ${bl?`<button class="bc-btn danger" onclick="deleteBaseline('${domain}')">🗑️</button>`:''}
+      </div>`;
+    g.appendChild(card);
+  });
+
+  renChangelog();
+  renHeatmap();
+}
+
+function renChangelog(){
+  const cl=document.getElementById('changelog');
+  if(!CHANGELOG.length){
+    cl.innerHTML=`<div class="empty" style="padding:24px"><div class="ei">🔍</div><p>Captura una foto inicial y luego compara para ver el registro de cambios aquí.</p></div>`;
+    return;
+  }
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n;
+  const uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
+  cl.innerHTML=CHANGELOG.slice(0,30).map(e=>{
+    const zoneTags=ZONES.map(z=>{
+      const zd=e.diff?.[z.id];if(!zd)return'';
+      return`<span class="cl-zone-tag ${zd.changed?'changed':'stable'}">${z.icon}${z.label}${zd.changed?` +${zd.changePct}%`:''}</span>`;
+    }).join('');
+    return`<div class="cl-item">
+      <div class="cl-dot" style="background:${uc(e.domain)}"></div>
+      <div class="cl-content">
+        <div class="cl-date">${e.dateLabel}</div>
+        <div class="cl-domain">${un(e.domain)} · ${e.domain}</div>
+        <div style="font-size:10px;color:var(--g4);margin-bottom:5px">
+          Baseline: ${e.baselineDate} → Comparado: ${e.compDate} · 
+          <strong style="color:${e.changedZones.length>0?'var(--bad)':'var(--ok)'}">${e.changedZones.length} zonas cambiaron</strong>
+          · Cambio total: ${e.totalChangePct}%
+        </div>
+        <div class="cl-zones">${zoneTags}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renHeatmap(){
+  const domains=Object.keys(BASELINES).filter(d=>BASELINES[d].lastCheck?.diff);
+  if(!domains.length){document.getElementById('hmSection').style.display='none';return;}
+  document.getElementById('hmSection').style.display='block';
+  const g=document.getElementById('hmGrid');g.innerHTML='';
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n;
+  const uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
+  domains.forEach(d=>{
+    const diff=BASELINES[d].lastCheck.diff;
+    const card=document.createElement('div');card.className='hm-card';
+    const zonesHtml=ZONES.map(z=>{
+      const zd=diff[z.id];if(!zd)return'';
+      const pct=zd.changePct||0;
+      const col=pct>40?'#ef4444':pct>15?'#f59e0b':'#10b981';
+      return`<div class="hm-zone">
+        <span class="hm-zone-label">${z.icon} ${z.label.slice(0,10)}</span>
+        <div class="hm-bar"><div class="hm-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+        <span class="hm-pct">${pct}%</span>
+      </div>`;
+    }).join('');
+    card.innerHTML=`<div class="hm-domain">${d}</div><div class="hm-name">${un(d)}</div><div class="hm-zones">${zonesHtml}</div>`;
+    g.appendChild(card);
+  });
+  renChangeCharts();
+}
+
+function renChangeCharts(){
+  const domains=Object.keys(BASELINES).filter(d=>BASELINES[d].lastCheck?.diff);
+  if(!domains.length){document.getElementById('chgCharts').style.display='none';return;}
+  document.getElementById('chgCharts').style.display='block';
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n;
+  const uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
+
+  // Bar: changed zones per domain
+  mk('cChgBar','bar',{
+    labels:domains.map(d=>un(d)),
+    datasets:ZONES.map(z=>({
+      label:z.label,
+      data:domains.map(d=>{const diff=BASELINES[d].lastCheck?.diff;return diff?.[z.id]?.changePct||0;}),
+      backgroundColor:['#137DC5','#C8963E','#10b981','#f59e0b','#8b5cf6','#06b6d4','#e879f9'][ZONES.indexOf(z)]+'99',
+      borderRadius:3,
+    }))
+  },{bar:1,stacked:true});
+
+  // Pie: which zone changes most
+  const zoneChanges=ZONES.map(z=>({
+    zone:z,
+    total:domains.reduce((s,d)=>{const diff=BASELINES[d].lastCheck?.diff;return s+(diff?.[z.id]?.changePct||0);},0)
+  }));
+  mk('cChgPie','doughnut',{
+    labels:zoneChanges.map(z=>z.zone.label),
+    datasets:[{data:zoneChanges.map(z=>z.total),
+      backgroundColor:['#137DC5','#C8963E','#10b981','#f59e0b','#8b5cf6','#06b6d4','#e879f9'],
+      borderColor:'rgba(11,37,69,.5)',borderWidth:2}]
+  },{pie:1});
+}
+
+function showDiff(domain, entry){
+  document.getElementById('diffTitle').textContent=`Análisis de Cambios — ${domain}`;
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n;
+  const body=document.getElementById('diffBody');
+  body.innerHTML=`
+    <div class="diff-meta">
+      <div class="diff-meta-item">🏛️ <strong>${un(domain)}</strong></div>
+      <div class="diff-meta-item">📸 Baseline: <strong>${entry.baselineDate}</strong></div>
+      <div class="diff-meta-item">🔍 Comparado: <strong>${entry.compDate}</strong></div>
+      <div class="diff-meta-item">⚠️ Zonas cambiadas: <strong style="color:${entry.changedZones.length>0?'var(--bad)':'var(--ok)'}">${entry.changedZones.length} / ${ZONES.length}</strong></div>
+      <div class="diff-meta-item">📊 Cambio total: <strong>${entry.totalChangePct}%</strong></div>
+    </div>
+    ${ZONES.map(z=>{
+      const zd=entry.diff?.[z.id];if(!zd)return'';
+      const cls=zd.changed?(zd.level==='high'?'bad':'warn'):'good';
+      const colMap={bad:'var(--bad)',warn:'var(--warn)',good:'var(--ok)'};
+      return`<div class="zone-diff-card">
+        <div class="zone-diff-header" onclick="toggleZone(this)">
+          <div class="zone-diff-title">
+            <span>${z.icon}</span>
+            <span>${z.label}</span>
+            <span class="tag ${zd.changed?(zd.level==='high'?'lo':'md'):'hi'}">${zd.changed?`✦ Cambió ${zd.changePct}%`:'✓ Sin cambios'}</span>
+          </div>
+          <span style="color:var(--g4);font-size:12px">▼</span>
+        </div>
+        <div class="zone-diff-body">
+          <div class="diff-columns">
+            <div><h4>📸 Versión Baseline (${entry.baselineDate})</h4>
+              <div class="diff-text">${(zd.baseSnippet||'Sin contenido detectado').slice(0,400)}</div>
+              <div style="font-size:10px;color:var(--g4);margin-top:5px">${zd.baseWords||0} palabras únicas detectadas</div>
+            </div>
+            <div><h4>🔍 Versión Actual (${entry.compDate})</h4>
+              <div class="diff-text">${(zd.currSnippet||'Sin contenido detectado').slice(0,400)}</div>
+              <div style="font-size:10px;color:var(--g4);margin-top:5px">${zd.currWords||0} palabras únicas detectadas</div>
+            </div>
+          </div>
+          ${zd.changed?`<div style="margin-top:10px;padding:8px 12px;background:rgba(239,68,68,.08);border-radius:6px;font-size:11px;color:#fca5a5">
+            ⚠️ Esta zona tuvo un <strong>${zd.changePct}%</strong> de cambio en su contenido textual.
+            ${zd.level==='high'?'Cambio significativo — revisar qué fue modificado.':zd.level==='medium'?'Cambio moderado.':'Cambio menor.'}
+          </div>`:''}
+        </div>
+      </div>`;
+    }).join('')}`;
+  document.getElementById('diffModal').classList.add('on');
+}
+
+function showLastDiff(domain){
+  const bl=BASELINES[domain];if(!bl?.lastCheck)return;
+  const entry={domain,baselineDate:bl.captureDate,compDate:bl.lastCheck.date,
+    diff:bl.lastCheck.diff,changedZones:bl.lastCheck.changedZones||[],
+    totalChangePct:Math.round(Object.values(bl.lastCheck.diff).reduce((s,v)=>s+v.changePct,0)/ZONES.length)};
+  showDiff(domain,entry);
+}
+
+function showBaselineInfo(domain){
+  const bl=BASELINES[domain];if(!bl)return;
+  toast(`📸 Baseline de ${domain}: capturado el ${bl.captureDate} · ${bl.zoneCount} zonas · ${(bl.htmlSize/1024).toFixed(1)}KB`,'ok');
+}
+
+function deleteBaseline(domain){
+  if(!confirm(`¿Eliminar baseline de ${domain}?`))return;
+  delete BASELINES[domain];
+  localStorage.setItem(LSK_BL,JSON.stringify(BASELINES));
+  renBaselineGrid();
+  toast(`Baseline de ${domain} eliminado`,'ok');
+}
+
+function toggleZone(header){
+  const body=header.nextElementSibling;
+  body.classList.toggle('open');
+  header.querySelector('span:last-child').textContent=body.classList.contains('open')?'▲':'▼';
+}
+
+function closeDiff(){document.getElementById('diffModal').classList.remove('on');}
+
+function exportChangeLog(){
+  if(!CHANGELOG.length){toast('Sin registros de cambios','e');return;}
+  const lines=['\uFEFFFecha,Dominio,Institución,Zones Cambiadas,Cambio Total %,Baseline,Comparado'];
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n;
+  CHANGELOG.forEach(e=>{
+    lines.push([e.dateLabel,e.domain,un(e.domain),e.changedZones.join(';'),e.totalChangePct,e.baselineDate,e.compDate].join(','));
+  });
+  // Zone detail
+  lines.push('');lines.push('Detalle por Zona');
+  lines.push('Fecha,Dominio,Zona,Cambió,% Cambio,Nivel');
+  CHANGELOG.forEach(e=>{
+    ZONES.forEach(z=>{
+      const zd=e.diff?.[z.id];if(!zd)return;
+      lines.push([e.dateLabel,e.domain,z.label,zd.changed?'SI':'NO',zd.changePct,zd.level].join(','));
+    });
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`cambios_edu_monitor_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+// ══════════════════════════════════════════════════════
 // SNAPSHOTS
+// ══════════════════════════════════════════════════════
 function gSnaps(){try{return JSON.parse(localStorage.getItem(LSK)||'[]');}catch(e){return[];}}
 function sSnaps(a){localStorage.setItem(LSK,JSON.stringify(a));}
 
@@ -487,7 +1170,7 @@ function updSnUI(){
   el.textContent=snaps.length>0?`💾 ${snaps.length} snapshot${snaps.length>1?'s':'`}`:'';
   const s=document.getElementById('cfg-ss');
   if(snaps.length>0){const l=snaps[0];
-    s.innerHTML=`<div class="note" style="border-color:var(--gold)"><strong style="color:var(--gold2)">Último snapshot:</strong> ${l.dateLabel} · ${l.main} · ${l.period} · ${Object.keys(l.data).length} dominios</div>`;}
+    s.innerHTML=`<div class="note" style="border-color:var(--gold)"><strong style="color:var(--gold2)">Último snapshot:</strong> ${l.dateLabel} · ${l.main} · ${l.period}</div>`;}
   else s.innerHTML='';
 }
 
@@ -496,6 +1179,7 @@ function renSnaps(){
   g.innerHTML='';
   if(!snaps.length){em.style.display='block';ds.style.display='none';return;}
   em.style.display='none';
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n,uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
   snaps.forEach(snap=>{
     const md=snap.data[snap.main]||{};
     const all=Object.values(snap.data),rnk=[...all].sort((a,b)=>(b.total||0)-(a.total||0));
@@ -530,46 +1214,45 @@ function loadSn(id){
 function renDelta(snaps){
   const lat=snaps[0],prv=snaps[1],dg=document.getElementById('dg');
   dg.innerHTML='';document.getElementById('snlbl').textContent=lat.main;
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n,uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
   Object.keys(lat.data).forEach(d=>{
     const cur=lat.data[d]||{},p=prv.data[d]||{};
     const ct=cur.total||0,pt=p.total||0;
     const delta=pt>0?(((ct-pt)/pt)*100).toFixed(1):null;
     const cw=cur.weeklyAvg||0,pw=p.weeklyAvg||0;
     const dw=pw>0?(((cw-pw)/pw)*100).toFixed(1):null;
-    const un=UNIS.find(x=>x.d===d),nm=un?un.n:d,col=un?un.c:'#94a3b8';
-    const dc=document.createElement('div');dc.className='dcard';
+    const col=uc(d),nm=un(d);
+    const dc=document.createElement('div');
+    dc.style.cssText='background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:14px 16px';
     const cl=delta===null?'eq':+delta>5?'up':+delta<-5?'dn':'eq';
-    const sg2=delta===null?'—':(+delta>0?'+':'')+delta+'%';
-    const wc=dw===null?'eq':+dw>5?'up':+dw<-5?'dn':'eq';
-    const sw=dw===null?'—':(+dw>0?'+':'')+dw+'%';
     dc.innerHTML=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
       <span style="width:8px;height:8px;border-radius:50%;background:${col};display:inline-block;flex-shrink:0"></span>
-      <div><div class="dname" style="margin:0">${nm}${d===lat.main?' ⭐':''}</div>
+      <div><div style="font-size:13px;font-weight:700;color:var(--w)">${nm}${d===lat.main?' ⭐':''}</div>
       <div style="font-size:10px;color:var(--g4)">${d}</div></div></div>
-      <div class="drow"><span>Capturas totales</span><span class="dv ${cl}">${ct.toLocaleString('es-CO')} <small>(${sg2})</small></span></div>
-      <div class="drow"><span>Prom. semanal</span><span class="dv ${wc}">${cw} <small>(${sw})</small></span></div>
-      <div class="drow"><span>Vs. snapshot anterior</span><span class="mn">${prv.dateLabel.slice(0,10)}</span></div>`;
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--g4)">Capturas totales</span>
+        <span style="font-family:var(--fm);font-weight:700;color:${delta!==null&&+delta>5?'var(--ok)':delta!==null&&+delta<-5?'var(--bad)':'var(--warn)'}">${ct.toLocaleString('es-CO')} (${delta!==null?(+delta>0?'+':'')+delta+'%':'N/D'})</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--g4)">Prom. semanal</span>
+        <span style="font-family:var(--fm);font-weight:700;color:${dw!==null&&+dw>5?'var(--ok)':dw!==null&&+dw<-5?'var(--bad)':'var(--warn)'}">${cw} (${dw!==null?(+dw>0?'+':'')+dw+'%':'N/D'})</span></div>`;
     dg.appendChild(dc);
   });
-  // Evolution chart
   const M=lat.main,dates=snaps.slice(0,8).reverse().map(s=>s.dateLabel.slice(0,10));
   const tots=snaps.slice(0,8).reverse().map(s=>(s.data[M]||{}).total||0);
   mk('cSE','line',{labels:dates,datasets:[{label:M,data:tots,borderColor:'#137DC5',backgroundColor:'rgba(19,125,197,.15)',fill:true,tension:0.4,pointRadius:5,pointBackgroundColor:'#137DC5'}]},{line:1});
-  // Weekly avg per snapshot for top 4 domains
   const top=Object.keys(lat.data).sort((a,b)=>((lat.data[b]||{}).total||0)-((lat.data[a]||{}).total||0)).slice(0,4);
   mk('cSR','bar',{
     labels:snaps.slice(0,6).reverse().map(s=>s.dateLabel.slice(0,10)),
-    datasets:top.map(d=>({label:UNIS.find(x=>x.d===d)?.n||d,
-      data:snaps.slice(0,6).reverse().map(s=>(s.data[d]||{}).weeklyAvg||0),
+    datasets:top.map(d=>({label:un(d),data:snaps.slice(0,6).reverse().map(s=>(s.data[d]||{}).weeklyAvg||0),
       backgroundColor:(UNIS.find(x=>x.d===d)?.c||'#94a3b8')+'99',
       borderColor:UNIS.find(x=>x.d===d)?.c||'#94a3b8',borderWidth:1.5,borderRadius:3}))
   },{bar:1});
 }
 
+// ══════════════════════════════════════════════════════
 // REPORT
+// ══════════════════════════════════════════════════════
 function updRepSel(){
   const sel=document.getElementById('rsnap'),snaps=gSnaps();
-  sel.innerHTML='<option value="current">Análisis actual (en memoria)</option>';
+  sel.innerHTML='<option value="current">Análisis actual</option>';
   snaps.forEach((s,i)=>{const opt=document.createElement('option');opt.value=s.id;
     opt.textContent=`${i===0?'Reciente: ':''}${s.dateLabel.slice(0,16)} · ${s.main}`;sel.appendChild(opt);});
 }
@@ -580,6 +1263,12 @@ function genRep(){
   let data=S,main=document.getElementById('md').value.trim(),days=+document.getElementById('per').value;
   if(sid!=='current'){const snap=snaps.find(s=>s.id===+sid);if(!snap){toast('Snapshot no encontrado','e');return;}data=snap.data;main=snap.main;days=snap.days;}
   if(!Object.keys(data).length){toast('No hay datos. Ejecuta un análisis.','e');return;}
+
+  // Special: changes report
+  if(type==='changes'){
+    genChangesReport();return;
+  }
+
   const all=Object.keys(data),md=data[main]||{};
   const rnk=all.map(d=>({d,...data[d]})).sort((a,b)=>(b.total||0)-(a.total||0));
   const myR=rnk.findIndex(r=>r.d===main)+1,maxT=Math.max(...rnk.map(r=>r.total||0),1);
@@ -587,15 +1276,8 @@ function genRep(){
   const now=new Date(),ds=now.toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
   const prevSn=snaps.length>=2?snaps[sid==='current'?0:snaps.findIndex(s=>s.id===+sid)+1]:null;
   const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n,uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
-  const tl={'weekly':'Semanal','monthly':'Mensual','comparison':'Comparativo'}[type];
+  const tl={'weekly':'Semanal','monthly':'Mensual'}[type]||'';
   const s2=md.stats||{},ratio=cAvg>0?((md.weeklyAvg||0)/cAvg*100).toFixed(0):null;
-  const ins=[];
-  if(myR===1)ins.push(`<strong>${main}</strong> ocupa el <strong>1er lugar</strong> en actividad web entre ${all.length} instituciones analizadas.`);
-  else ins.push(`<strong>${main}</strong> ocupa la posición <strong>#${myR} de ${all.length}</strong> en actividad web.`);
-  if(ratio)ins.push(`Con <strong>${md.weeklyAvg||0} capturas/semana</strong>, la actividad es el <strong>${ratio}%</strong> del promedio competidor (${cAvg.toFixed(1)}/sem).`);
-  if(s2.slope>0.3)ins.push(`<strong>Tendencia positiva</strong> (slope +${s2.slope}): la actividad digital está creciendo en el período.`);
-  else if(s2.slope<-0.3)ins.push(`<strong>Tendencia negativa</strong> (slope ${s2.slope}): la actividad digital está disminuyendo.`);
-  else ins.push(`Actividad digital <strong>estable</strong> en el período (slope ${s2.slope||0}).`);
   const dRow=d=>{if(!prevSn)return'';
     const ct=(data[d]||{}).total||0,pt=(prevSn.data[d]||{}).total||0;
     const dl=pt>0?(((ct-pt)/pt)*100).toFixed(1):null;
@@ -607,7 +1289,7 @@ function genRep(){
       <div class="rp-meta"><div style="font-size:13px;font-weight:700;color:#0B2545">Reporte ${tl}</div><div>${ds}</div><div>Período: ${days} días</div></div>
     </div>
     <div class="rp-title">Análisis de Actividad Web — ${main}</div>
-    <div class="rp-sub">Comparativa frente a ${compsA.length} competidores · ${all.length} dominios analizados</div>
+    <div class="rp-sub">${all.length} dominios analizados · ${compsA.length} competidores</div>
     <div class="rp-kpis">
       <div class="rp-kpi"><div class="rv">${(md.total||0).toLocaleString('es-CO')}</div><div class="rl">Capturas Totales</div></div>
       <div class="rp-kpi" style="border-top-color:#C8963E"><div class="rv">${md.weeklyAvg||0}</div><div class="rl">Prom. Semanal</div></div>
@@ -615,16 +1297,14 @@ function genRep(){
       <div class="rp-kpi" style="border-top-color:#f59e0b"><div class="rv">${ratio?ratio+'%':'N/D'}</div><div class="rl">vs. Competencia</div></div>
     </div>
     <div class="rp-sec"><h3>Ranking Comparativo</h3>
-      <table class="rp-tbl"><thead><tr><th>#</th><th>Institución</th><th>Dominio</th><th>Capturas</th><th>Prom/sem</th><th>Actividad rel.</th>${prevSn?'<th>Δ vs. anterior</th>':''}<th>Nivel</th></tr></thead>
-      <tbody>${rnk.map((r,i)=>`<tr ${r.d===main?'class="mr"':''}><td>${i+1}</td><td>${un(r.d)}</td>
-        <td style="font-size:10px;color:#64748b">${r.d}</td>
+      <table class="rp-tbl"><thead><tr><th>#</th><th>Institución</th><th>Capturas</th><th>Prom/sem</th><th>Actividad rel.</th>${prevSn?'<th>Δ vs. anterior</th>':''}<th>Nivel</th></tr></thead>
+      <tbody>${rnk.map((r,i)=>`<tr ${r.d===main?'class="mr"':''}><td>${i+1}</td><td>${un(r.d)}<div style="font-size:9px;color:#64748b">${r.d}</div></td>
         <td style="font-weight:700">${(r.total||0).toLocaleString('es-CO')}</td><td>${r.weeklyAvg||0}</td>
         <td><div style="display:flex;align-items:center;gap:5px">
           <div style="height:5px;width:60px;background:#e2e8f0;border-radius:3px;overflow:hidden">
             <div style="height:100%;width:${Math.round((r.total||0)/maxT*100)}%;background:${uc(r.d)};border-radius:3px"></div>
           </div><span style="font-size:10px">${Math.round((r.total||0)/maxT*100)}%</span></div></td>
-        ${dRow(r.d)}
-        <td><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;
+        ${dRow(r.d)}<td><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;
           background:${(r.dailyAvg||0)>=5?'#d1fae5':(r.dailyAvg||0)>=1?'#fef3c7':'#fee2e2'};
           color:${(r.dailyAvg||0)>=5?'#065f46':(r.dailyAvg||0)>=1?'#92400e':'#991b1b'}">
           ${(r.dailyAvg||0)>=5?'Alta':(r.dailyAvg||0)>=1?'Media':'Baja'}</span></td></tr>`).join('')}
@@ -634,18 +1314,81 @@ function genRep(){
       <table class="rp-tbl"><thead><tr><th>Indicador</th><th>Valor</th><th>Indicador</th><th>Valor</th></tr></thead>
       <tbody>
         <tr><td>Media semanal</td><td style="font-weight:700">${s2.mean||0}</td><td>Mediana semanal</td><td style="font-weight:700">${s2.median||0}</td></tr>
-        <tr><td>Desviación estándar</td><td style="font-weight:700">${s2.std||0}</td><td>Coef. de Variación</td><td style="font-weight:700">${s2.cv||0}%</td></tr>
-        <tr><td>Máximo semanal</td><td style="font-weight:700">${s2.max||0}</td><td>Tendencia (slope)</td><td style="font-weight:700;color:${(s2.slope||0)>0?'#059669':'#dc2626'}">${s2.slope||0}</td></tr>
+        <tr><td>Desv. estándar</td><td style="font-weight:700">${s2.std||0}</td><td>Coef. Variación</td><td style="font-weight:700">${s2.cv||0}%</td></tr>
+        <tr><td>Máx. semanal</td><td style="font-weight:700">${s2.max||0}</td><td>Tendencia slope</td><td style="font-weight:700;color:${(s2.slope||0)>0?'#059669':'#dc2626'}">${s2.slope||0}</td></tr>
       </tbody></table>
     </div>
-    <div class="rp-sec"><h3>Hallazgos e Interpretación</h3>${ins.map(i=>`<div class="rp-ins">${i}</div>`).join('')}</div>
-    <div class="rp-ftr"><span>EDU Monitor v3 · Javier Fernando Rubiano E. · VISORIA Intelligence</span><span>Generado: ${now.toLocaleString('es-CO')}</span></div>
+    <div class="rp-ftr"><span>EDU Monitor v4 · Javier Fernando Rubiano E. · VISORIA Intelligence</span><span>Generado: ${now.toLocaleString('es-CO')}</span></div>
   </div>`;
   document.getElementById('repArea').innerHTML=html;
-  document.getElementById('btnPr').disabled=false;
-  document.getElementById('btnRC').disabled=false;
+  document.getElementById('btnPr').disabled=false;document.getElementById('btnRC').disabled=false;
   curRep={rnk,main,days,all,data,ds,tl};
   toast('📋 Reporte generado','ok');
+}
+
+function genChangesReport(){
+  const now=new Date(),ds=now.toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
+  const domainsWithBaseline=Object.keys(BASELINES).filter(d=>BASELINES[d].lastCheck?.diff);
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n,uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
+  if(!domainsWithBaseline.length){toast('No hay comparaciones de cambios registradas. Ve a la pestaña 🔍 Cambios primero.','e');return;}
+
+  const rows=domainsWithBaseline.map(d=>{
+    const bl=BASELINES[d],diff=bl.lastCheck.diff;
+    const changed=bl.lastCheck.changedZones||[];
+    const totalPct=Math.round(Object.values(diff).reduce((s,v)=>s+v.changePct,0)/ZONES.length);
+    return{d,name:un(d),color:uc(d),changed,totalPct,diff,baseDate:bl.captureDate,compDate:bl.lastCheck.date};
+  }).sort((a,b)=>b.totalPct-a.totalPct);
+
+  const html=`<div class="rp" id="repPrev">
+    <div class="rp-hdr">
+      <div><div class="rp-logo">EDU <span>Monitor</span></div><div style="font-size:11px;color:#64748b">VISORIA Intelligence · javierrubiano.com</div></div>
+      <div class="rp-meta"><div style="font-size:13px;font-weight:700;color:#0B2545">Reporte de Cambios Web</div><div>${ds}</div></div>
+    </div>
+    <div class="rp-title">Detección de Cambios por Zona — ${domainsWithBaseline.length} Instituciones</div>
+    <div class="rp-sub">Análisis comparativo de zonas modificadas entre baseline y versión actual</div>
+    <div class="rp-kpis">
+      <div class="rp-kpi"><div class="rv">${domainsWithBaseline.length}</div><div class="rl">Dominios Analizados</div></div>
+      <div class="rp-kpi" style="border-top-color:#ef4444"><div class="rv">${rows.filter(r=>r.changed.length>0).length}</div><div class="rl">Con Cambios</div></div>
+      <div class="rp-kpi" style="border-top-color:#10b981"><div class="rv">${rows.filter(r=>r.changed.length===0).length}</div><div class="rl">Sin Cambios</div></div>
+      <div class="rp-kpi" style="border-top-color:#f59e0b"><div class="rv">${ZONES.filter(z=>rows.some(r=>r.changed.includes(z.id))).length}</div><div class="rl">Zonas Afectadas</div></div>
+    </div>
+    <div class="rp-sec"><h3>Resumen de Cambios por Institución</h3>
+      <table class="rp-tbl"><thead><tr><th>Institución</th><th>Baseline</th><th>Comparado</th>
+        ${ZONES.map(z=>`<th>${z.icon}</th>`).join('')}<th>Cambio Total</th></tr></thead>
+      <tbody>${rows.map(r=>`<tr>
+        <td style="font-weight:700">${r.name}<div style="font-size:9px;color:#64748b">${r.d}</div></td>
+        <td style="font-size:10px">${r.baseDate}</td><td style="font-size:10px">${r.compDate}</td>
+        ${ZONES.map(z=>{const zd=r.diff[z.id];return`<td style="text-align:center">
+          <span style="font-size:11px;padding:2px 5px;border-radius:4px;font-weight:700;
+            background:${zd?.changed?(zd.level==='high'?'#fee2e2':zd.level==='medium'?'#fef3c7':'#fef3c7'):'#d1fae5'};
+            color:${zd?.changed?(zd.level==='high'?'#991b1b':zd.level==='medium'?'#92400e':'#92400e'):'#065f46'}">
+            ${zd?.changed?zd.changePct+'%':'✓'}</span></td>`;}).join('')}
+        <td><div style="display:flex;align-items:center;gap:5px">
+          <div class="rp-zone-bar" style="width:60px"><div class="rp-zone-fill" style="width:${r.totalPct}%;background:${r.totalPct>30?'#ef4444':r.totalPct>10?'#f59e0b':'#10b981'}"></div></div>
+          <span style="font-weight:700;font-size:11px;color:${r.totalPct>30?'#dc2626':r.totalPct>10?'#d97706':'#059669'}">${r.totalPct}%</span>
+        </div></td></tr>`).join('')}
+      </tbody></table>
+    </div>
+    <div class="rp-sec"><h3>Interpretación y Recomendaciones</h3>
+      ${rows.filter(r=>r.changed.length>0).map(r=>`
+        <div class="rp-ins">
+          <strong>${r.name}</strong> modificó ${r.changed.length} zona(s): ${r.changed.map(id=>ZONES.find(z=>z.id===id)?.label||id).join(', ')}.
+          Cambio total estimado: ${r.totalPct}%.
+          ${r.totalPct>30?'🔴 Cambio significativo — revisar qué contenido fue modificado o eliminado.':
+            r.totalPct>10?'🟡 Cambio moderado — actualización normal de contenido.':
+            '🟢 Cambio menor — posiblemente actualizaciones de fechas o datos menores.'}
+        </div>`).join('')}
+      ${rows.filter(r=>r.changed.length===0).map(r=>`
+        <div class="rp-ins" style="background:#f0fdf4;border-color:#10b981;color:#065f46">
+          <strong>${r.name}</strong>: sin cambios detectados entre las versiones comparadas.
+        </div>`).join('')}
+    </div>
+    <div class="rp-ftr"><span>EDU Monitor v4 · Javier Fernando Rubiano E. · VISORIA Intelligence</span><span>Generado: ${now.toLocaleString('es-CO')}</span></div>
+  </div>`;
+  document.getElementById('repArea').innerHTML=html;
+  document.getElementById('btnPr').disabled=false;document.getElementById('btnRC').disabled=false;
+  curRep={rnk:rows,main:'cambios',days:0,all:domainsWithBaseline,data:{},ds,tl:'Cambios'};
+  toast('📋 Reporte de cambios generado','ok');
 }
 
 function printRep(){
@@ -653,48 +1396,59 @@ function printRep(){
   const w=window.open('','_blank');
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>EDU Monitor — Reporte</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',sans-serif;padding:20px;background:#fff;color:#1a202c}
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',sans-serif;padding:20px;background:#fff;color:#1a202c;font-size:12px}
     .rp{background:#fff;padding:0}.rp-hdr{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:14px;border-bottom:3px solid #0B2545;margin-bottom:18px}
     .rp-logo{font-size:20px;font-weight:800;color:#0B2545;font-family:Georgia,serif;font-style:italic}.rp-logo span{color:#C8963E}
     .rp-meta{text-align:right;font-size:11px;color:#64748b}.rp-title{font-size:18px;font-weight:700;color:#0B2545;margin-bottom:3px;font-family:Georgia,serif}
-    .rp-sub{font-size:12px;color:#475569;margin-bottom:18px}.rp-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+    .rp-sub{font-size:12px;color:#475569;margin-bottom:18px}
+    .rp-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
     .rp-kpi{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;text-align:center;border-top:3px solid #137DC5}
     .rp-kpi .rv{font-size:20px;font-weight:800;color:#0B2545;font-family:Georgia,serif}.rp-kpi .rl{font-size:9px;color:#64748b;font-weight:600;text-transform:uppercase;margin-top:2px}
     .rp-sec{margin-bottom:16px}.rp-sec h3{font-size:11px;font-weight:700;color:#0B2545;margin-bottom:7px;padding-bottom:3px;border-bottom:1px solid #e2e8f0;text-transform:uppercase;letter-spacing:.5px}
-    .rp-tbl{width:100%;border-collapse:collapse;font-size:11px}.rp-tbl th{background:#0B2545;color:#fff;padding:5px 9px;text-align:left;font-size:9px}
-    .rp-tbl td{padding:6px 9px;border-bottom:1px solid #f1f5f9;color:#374151}.rp-tbl tr:nth-child(even) td{background:#f8fafc}
+    .rp-tbl{width:100%;border-collapse:collapse;font-size:10px}.rp-tbl th{background:#0B2545;color:#fff;padding:5px 7px;text-align:left}
+    .rp-tbl td{padding:5px 7px;border-bottom:1px solid #f1f5f9;color:#374151}.rp-tbl tr:nth-child(even) td{background:#f8fafc}
     .rp-tbl tr.mr td{background:#EFF6FF;font-weight:700;color:#1e40af}
     .dp{color:#059669;font-weight:700}.dn2{color:#dc2626;font-weight:700}.dq{color:#d97706;font-weight:700}
     .rp-ins{background:#f0f9ff;border-left:3px solid #137DC5;padding:9px 11px;margin-bottom:7px;border-radius:0 6px 6px 0;font-size:11px;color:#1e40af;line-height:1.5}
+    .rp-zone-bar{height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden;display:inline-block;vertical-align:middle}
+    .rp-zone-fill{height:100%;border-radius:5px;display:block}
     .rp-ftr{margin-top:18px;padding-top:10px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;font-size:10px;color:#94a3b8}
-    </style></head><body>${el.outerHTML}<script>window.onload=()=>{window.print();}<\/script></body></html>`);
+    @media print{body{padding:0}}</style></head>
+    <body>${el.outerHTML}<script>window.onload=()=>{window.print();}<\/script></body></html>`);
   w.document.close();
 }
 
 function repCSV(){
   if(!curRep){toast('Genera el reporte primero','e');return;}
   const{rnk,main,ds}=curRep,un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n;
-  const lines=['\uFEFFReporte EDU Monitor — '+ds,'','Dominio,Institución,Total,Prom/día,Prom/semana,Media,CV%,Slope,Nivel'];
-  rnk.forEach(r=>lines.push([r.d,un(r.d),r.total||0,r.dailyAvg||0,r.weeklyAvg||0,r.stats?.mean||0,r.stats?.cv||0,r.stats?.slope||0,(r.dailyAvg||0)>=5?'Alta':(r.dailyAvg||0)>=1?'Media':'Baja'].join(',')));
+  const lines=['\uFEFFReporte EDU Monitor v4 — '+ds];
+  if(main==='cambios'){
+    lines.push('','Dominio,Institución,Baseline,Comparado,Zonas Cambiadas,% Total');
+    rnk.forEach(r=>lines.push([r.d,r.name,r.baseDate,r.compDate,r.changed.join(';'),r.totalPct].join(',')));
+  }else{
+    lines.push('','Dominio,Institución,Total,Prom/día,Prom/semana,Media,CV%,Slope,Nivel');
+    rnk.forEach(r=>lines.push([r.d,un(r.d),r.total||0,r.dailyAvg||0,r.weeklyAvg||0,r.stats?.mean||0,r.stats?.cv||0,r.stats?.slope||0,(r.dailyAvg||0)>=5?'Alta':(r.dailyAvg||0)>=1?'Media':'Baja'].join(',')));
+  }
   const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download=`reporte_edu_monitor_${main}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.href=url;a.download=`reporte_edu_monitor_v4_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();URL.revokeObjectURL(url);
 }
 
 function expCSV(){
   if(!ran){toast('Ejecuta primero un análisis','e');return;}
   const main=document.getElementById('md').value.trim();
-  const lines=['\uFEFFDominio,Institución,Total,Prom Diario,Prom Semanal,Media,Mediana,Desv.Std,CV%,Max/Sem,Slope,Primera,Última'];
-  Object.entries(S).forEach(([d,r])=>{const u=UNIS.find(x=>x.d===d);
-    lines.push([d,u?u.n:d,r.total||0,r.dailyAvg||0,r.weeklyAvg||0,r.stats?.mean||0,r.stats?.median||0,r.stats?.std||0,r.stats?.cv||0,r.stats?.max||0,r.stats?.slope||0,r.first||'—',r.last||'—'].join(','));});
+  const lines=['\uFEFFDominio,Total,Prom Diario,Prom Semanal,Media,Mediana,CV%,Max,Slope,Primera,Última'];
+  Object.entries(S).forEach(([d,r])=>lines.push([d,r.total||0,r.dailyAvg||0,r.weeklyAvg||0,r.stats?.mean||0,r.stats?.median||0,r.stats?.cv||0,r.stats?.max||0,r.stats?.slope||0,r.first||'—',r.last||'—'].join(',')));
   const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download=`edu_monitor_${main}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.href=url;a.download=`edu_monitor_v4_${main}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();URL.revokeObjectURL(url);
 }
 
-// RENDER
+// ══════════════════════════════════════════════════════
+// RENDER DASHBOARDS
+// ══════════════════════════════════════════════════════
 function rndr(main,comps,days){
   const D=S[main]||{},all=[main,...(comps||[]).filter(c=>c!==main)];
   const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n,uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
@@ -738,7 +1492,6 @@ function rndr(main,comps,days){
       return{label:un(d),data:[+((r.total||0)/mx2[0]*10).toFixed(1),+((r.weeklyAvg||0)/mx2[1]*10).toFixed(1),
         +(wks/mx2[2]*10).toFixed(1),+((r.stats?.max||0)/mx2[3]*10).toFixed(1),+((100-(cv>100?100:cv))/mx2[4]*10).toFixed(1)],
         borderColor:uc(d),backgroundColor:uc(d)+'22',pointBackgroundColor:uc(d),borderWidth:2};})},{radar:1});
-
   const aWks=[...new Set(all.flatMap(d=>(S[d]?.weekKeys||[])))].sort();
   mk('cMl','line',{labels:aWks.map(w=>w.replace('-S',' S')),
     datasets:all.map(d=>({label:un(d),data:aWks.map(w=>(S[d]?.byWeek||{})[w]||0),
@@ -772,13 +1525,13 @@ function rndr(main,comps,days){
   mk('cHi','bar',{labels:bins.map(b=>b.l),datasets:[{label:'Frecuencia',data:bins.map(b=>b.c),backgroundColor:'rgba(19,125,197,.55)',borderColor:'#137DC5',borderWidth:1.5,borderRadius:4}]},{bar:1,yl:'# semanas'});
   mk('cTr','line',{labels:(D.weekKeys||[]).map(w=>w.replace('-S',' S')),
     datasets:[{label:'Datos reales',data:D.weekVals||[],borderColor:'#137DC5',backgroundColor:'rgba(19,125,197,.1)',fill:true,tension:0.3,pointRadius:3},
-      {label:'Tendencia lineal',data:D.trend||[],borderColor:'#C8963E',borderDash:[6,3],pointRadius:0,borderWidth:2,fill:false,tension:0}]},{line:1});
+      {label:'Tendencia',data:D.trend||[],borderColor:'#C8963E',borderDash:[6,3],pointRadius:0,borderWidth:2,fill:false,tension:0}]},{line:1});
   mk('cDl','bar',{labels:(D.weekKeys||[]).slice(1).map(w=>w.replace('-S',' S')),
     datasets:[{label:'Δ% semanal',data:(D.deltas||[]).slice(1),
       backgroundColor:(D.deltas||[]).slice(1).map(v=>v>=0?'rgba(16,185,129,.55)':'rgba(239,68,68,.55)'),
       borderColor:(D.deltas||[]).slice(1).map(v=>v>=0?'#10b981':'#ef4444'),borderWidth:1.5,borderRadius:4}]},{bar:1,yl:'%'});
   mk('cMA','line',{labels:(D.weekKeys||[]).map(w=>w.replace('-S',' S')),
-    datasets:[{label:'Semana real',data:D.weekVals||[],borderColor:'rgba(19,125,197,.4)',pointRadius:2,tension:0.3,fill:false},
+    datasets:[{label:'Real',data:D.weekVals||[],borderColor:'rgba(19,125,197,.4)',pointRadius:2,tension:0.3,fill:false},
       {label:'MA-4',data:D.ma4||[],borderColor:'#e0ab52',borderWidth:2.5,pointRadius:0,tension:0.5,fill:false}]},{line:1});
   const mvs=aWks,mvD=mvs.map(w=>(S[main]?.byWeek||{})[w]||0);
   const cMv=mvs.map(w=>{const v=comps.map(c=>(S[c]?.byWeek||{})[w]||0);return v.length?+(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1):0;});
@@ -787,23 +1540,28 @@ function rndr(main,comps,days){
       {label:'Media competencia',data:cMv,borderColor:'#C8963E',borderDash:[5,3],pointRadius:0,borderWidth:2,fill:false,tension:0.35}]},{line:1});
 }
 
+// ══════════════════════════════════════════════════════
 // CHART FACTORY
+// ══════════════════════════════════════════════════════
 const TC={plugins:{legend:{labels:{color:'#94a3b8',font:{size:10},boxWidth:10}},
   tooltip:{backgroundColor:'rgba(11,37,69,.95)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#fff',bodyColor:'#94a3b8',padding:10}}};
 function mk(id,type,data,opt={}){
   if(CH[id])CH[id].destroy();
   const ctx=document.getElementById(id);if(!ctx)return;
   let sc={};
-  if(type!=='radar'){
+  if(type!=='radar'&&type!=='doughnut'){
     if(opt.h){sc.x={ticks:{color:'#475569'},grid:{color:'rgba(255,255,255,.05)'}};sc.y={ticks:{color:'#475569',font:{size:10}},grid:{display:false}};}
     else{sc.x={ticks:{color:'#475569',font:{size:9},maxRotation:45},grid:{color:'rgba(255,255,255,.04)'}};
       sc.y={ticks:{color:'#475569'},grid:{color:'rgba(255,255,255,.06)'},...(opt.yl?{title:{display:true,text:opt.yl,color:'#475569',font:{size:10}}}:{})};}
+    if(opt.stacked){sc.x.stacked=true;sc.y.stacked=true;}
   }
   CH[id]=new Chart(ctx,{type,data,options:{responsive:true,maintainAspectRatio:true,indexAxis:opt.h?'y':'x',...TC,
-    scales:type==='radar'?{r:{ticks:{color:'#475569',backdropColor:'transparent',font:{size:9}},grid:{color:'rgba(255,255,255,.1)'},pointLabels:{color:'#94a3b8',font:{size:9}},suggestedMin:0,suggestedMax:10}}:sc}});
+    scales:type==='radar'?{r:{ticks:{color:'#475569',backdropColor:'transparent',font:{size:9}},grid:{color:'rgba(255,255,255,.1)'},pointLabels:{color:'#94a3b8',font:{size:9}},suggestedMin:0,suggestedMax:10}}:type==='doughnut'?{}:sc}});
 }
 
+// ══════════════════════════════════════════════════════
 // HELPERS
+// ══════════════════════════════════════════════════════
 function ftg(d){if(d>=5)return{c:'hi',l:'Alta'};if(d>=1)return{c:'md',l:'Media'};return{c:'lo',l:'Baja'};}
 function ttg(s){if(s>0.3)return'<span class="bdg up">▲ Creciendo</span>';if(s<-0.3)return'<span class="bdg dn">▼ Bajando</span>';return'<span class="bdg neu">→ Estable</span>';}
 function srx(l,v){return`<div class="srx"><span>${l}</span><span>${typeof v==='number'?v.toLocaleString('es-CO'):v}</span></div>`;}
@@ -812,21 +1570,21 @@ function bIns(D,main,cAvg,rank,total){
   const ins=[],W=D.weeklyAvg||0,s=D.stats||{};
   if(rank===1)ins.push({t:'good',icon:'🏆',title:'Líder en actividad web',txt:`${main} lidera con ${(D.total||0).toLocaleString()} capturas en el período.`});
   else ins.push({t:rank<=3?'info':'warn',icon:rank<=3?'📈':'📊',title:`Posición #${rank} de ${total}`,txt:`Hay ${rank-1} institución(es) con mayor frecuencia de actualización web.`});
-  if(s.slope>0.3)ins.push({t:'good',icon:'📈',title:'Tendencia positiva',txt:`Actividad creciendo +${s.slope}/semana. Buena dinámica digital.`});
-  else if(s.slope<-0.3)ins.push({t:'warn',icon:'📉',title:'Tendencia a la baja',txt:`La actividad disminuye ${Math.abs(s.slope)}/semana. Revisar estrategia.`});
-  else ins.push({t:'info',icon:'➡️',title:'Actividad estable',txt:'La frecuencia de actualización se mantiene constante.'});
+  if(s.slope>0.3)ins.push({t:'good',icon:'📈',title:'Tendencia positiva',txt:`Actividad creciendo +${s.slope}/semana.`});
+  else if(s.slope<-0.3)ins.push({t:'warn',icon:'📉',title:'Tendencia a la baja',txt:`La actividad disminuye ${Math.abs(s.slope)}/semana.`});
+  else ins.push({t:'info',icon:'➡️',title:'Actividad estable',txt:'La frecuencia se mantiene constante en el período.'});
   if(cAvg>0){const r=(W/cAvg*100).toFixed(0);
     ins.push(W>=cAvg?{t:'good',icon:'💪',title:`${r}% vs. media competencia`,txt:`Con ${W}/sem supera el promedio (${cAvg.toFixed(1)}/sem).`}
       :{t:'bad',icon:'⚠️',title:`Solo ${r}% vs. media competencia`,txt:`Con ${W}/sem está bajo el promedio (${cAvg.toFixed(1)}/sem).`});}
-  if(s.cv>60)ins.push({t:'warn',icon:'〰️',title:`Alta variabilidad CV=${s.cv}%`,txt:'Publicación irregular. Se recomienda estrategia más consistente.'});
-  else ins.push({t:'good',icon:'✅',title:`Consistencia CV=${s.cv}%`,txt:'Distribución de actualizaciones uniforme en el período.'});
+  if(s.cv>60)ins.push({t:'warn',icon:'〰️',title:`Alta variabilidad CV=${s.cv}%`,txt:'Publicación irregular.'});
+  else ins.push({t:'good',icon:'✅',title:`Consistencia CV=${s.cv}%`,txt:'Distribución de actualizaciones uniforme.'});
   return ins;
 }
 function ov(b){document.getElementById('ov').classList.toggle('on',b);document.getElementById('btnR').disabled=b;}
 function sp(v){document.getElementById('pf').style.width=v+'%';}
 function sLM(m){document.getElementById('lm').textContent=m;}
 function sLS(m){document.getElementById('ls').textContent=m;}
-function toast(m,t='ok'){const el=document.getElementById('toast');el.textContent=m;el.className=t==='ok'?'on ok-t':'on err-t';clearTimeout(el._t);el._t=setTimeout(()=>el.className='',4500);}
+function toast(m,t='ok'){const el=document.getElementById('toast');el.textContent=m;el.className=t==='ok'?'on ok-t':'on err-t';clearTimeout(el._t);el._t=setTimeout(()=>el.className='',5000);}
 </script>
 </body>
 </html>
