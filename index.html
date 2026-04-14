@@ -339,7 +339,7 @@ td{padding:10px;color:var(--w);vertical-align:middle}
       <button class="btn bgh" id="btnC" onclick="expCSV()" disabled>📥 CSV</button>
     </div>
   </div>
-  <div class="note"><strong>v4 — Detección de Cambios:</strong> La pestaña 🔍 <strong>Cambios</strong> captura una "foto inicial" (baseline) del contenido real de cada sitio usando la Wayback Machine y detecta qué zonas específicas cambiaron: Inicio, Programas, Noticias, Admisiones, Investigación, Footer. Registra el historial completo de cambios.</div>
+  <div class="note"><strong>v4 — Detección de Cambios:</strong> Consulta automáticamente múltiples variantes de URL (<code>dominio.edu.co</code>, <code>www.</code>, <code>dominio/*</code>) para maximizar capturas. Detecta cambios en <strong>8 zonas</strong>: 🖼️ Banner/Portada, 🏠 Inicio, 🎓 Programas, 📰 Noticias, 📋 Admisiones, 🔬 Investigación, 📞 Contacto y ⬇️ Footer. Si un dominio muestra 0 capturas, prueba con <strong>6 meses o 1 año</strong> de período.</div>
   <div id="cfg-ss"></div>
 </div>
 
@@ -494,6 +494,23 @@ td{padding:10px;color:var(--w);vertical-align:middle}
 // ══════════════════════════════════════════════════════
 // CONSTANTS
 // ══════════════════════════════════════════════════════
+// Known URL variants for domains that use www or subdomains
+const DOMAIN_ALIASES={
+  'unisalle.edu.co':    ['unisalle.edu.co','www.unisalle.edu.co'],
+  'uniandes.edu.co':    ['uniandes.edu.co','www.uniandes.edu.co'],
+  'javeriana.edu.co':   ['javeriana.edu.co','www.javeriana.edu.co','puj.edu.co'],
+  'urosario.edu.co':    ['urosario.edu.co','www.urosario.edu.co'],
+  'usantotomas.edu.co': ['usantotomas.edu.co','www.usantotomas.edu.co'],
+  'uniminuto.edu.co':   ['uniminuto.edu.co','www.uniminuto.edu.co','uniminuto.edu'],
+  'poligran.edu.co':    ['poligran.edu.co','www.poligran.edu.co'],
+  'unisabana.edu.co':   ['unisabana.edu.co','www.unisabana.edu.co'],
+  'uexternado.edu.co':  ['uexternado.edu.co','www.uexternado.edu.co'],
+  'ean.edu.co':         ['ean.edu.co','www.ean.edu.co','universidadean.edu.co'],
+  'utadeo.edu.co':      ['utadeo.edu.co','www.utadeo.edu.co'],
+  'unbosque.edu.co':    ['unbosque.edu.co','www.unbosque.edu.co'],
+  'ecci.edu.co':        ['ecci.edu.co','www.ecci.edu.co'],
+};
+
 const UNIS=[
   {d:'uniandes.edu.co',   n:'Uniandes',          c:'#1a9ae0',on:true},
   {d:'urosario.edu.co',   n:'U. Rosario',         c:'#C8963E',on:true},
@@ -511,13 +528,14 @@ const UNIS=[
 
 // Zones to detect in HTML content
 const ZONES=[
-  {id:'home',   label:'Inicio/Home',    icon:'🏠', keywords:['hero','banner','slider','carousel','portada','bienvenid','home']},
-  {id:'prog',   label:'Programas',      icon:'🎓', keywords:['program','carrera','facultad','pregrado','posgrado','maestria','doctorado','especializacion']},
-  {id:'news',   label:'Noticias/Blog',  icon:'📰', keywords:['noticia','news','blog','novedad','evento','actualidad','comunicado']},
-  {id:'adm',    label:'Admisiones',     icon:'📋', keywords:['admision','inscripcion','matricula','ingreso','aspirante','convocatoria']},
-  {id:'inv',    label:'Investigación',  icon:'🔬', keywords:['investigacion','research','grupo','semillero','publicacion','ciencia']},
-  {id:'contact',label:'Contacto',       icon:'📞', keywords:['contacto','contact','telefono','direccion','email','sede','campus']},
-  {id:'footer', label:'Footer/Pie',     icon:'⬇️', keywords:['footer','pie','redes','social','facebook','instagram','twitter','linkedin']},
+  {id:'banner', label:'Banner/Portada',   icon:'🖼️', keywords:['hero','banner','slider','carousel','portada','featured','destacado','principal','cover','splash','jumbotron','swiper','owl-carousel','header-image','main-banner','top-banner']},
+  {id:'home',   label:'Inicio/Home',      icon:'🏠', keywords:['home','bienvenid','presentacion','quienes-somos','about','mision','vision','inicio','index']},
+  {id:'prog',   label:'Programas',        icon:'🎓', keywords:['program','carrera','facultad','pregrado','posgrado','maestria','doctorado','especializacion','oferta-academica','formacion']},
+  {id:'news',   label:'Noticias/Eventos', icon:'📰', keywords:['noticia','news','blog','novedad','evento','actualidad','comunicado','prensa','release','noticias']},
+  {id:'adm',    label:'Admisiones',       icon:'📋', keywords:['admision','inscripcion','matricula','ingreso','aspirante','convocatoria','proceso-admision','inscribete']},
+  {id:'inv',    label:'Investigación',    icon:'🔬', keywords:['investigacion','research','grupo','semillero','publicacion','ciencia','innovacion','laboratorio']},
+  {id:'contact',label:'Contacto/Sedes',   icon:'📞', keywords:['contacto','contact','telefono','direccion','email','sede','campus','ubicacion','mapa']},
+  {id:'footer', label:'Footer/Redes',     icon:'⬇️', keywords:['footer','pie','redes','social','facebook','instagram','twitter','linkedin','youtube','tiktok']},
 ];
 
 const PX=[
@@ -570,40 +588,92 @@ function st(n){
 // ══════════════════════════════════════════════════════
 // CDX FETCH
 // ══════════════════════════════════════════════════════
-async function fCDX(domain,from,to){
-  const base=`https://web.archive.org/cdx/search/cdx?url=${domain}&output=json&fl=timestamp,statuscode&from=${from}&to=${to}&limit=5000&filter=statuscode:200`;
-  const urls=[base,...PX.map(p=>p(base))];
-  for(let i=0;i<urls.length;i++){
-    sLS(`Proxy ${i+1}/${urls.length}: ${domain.slice(0,20)}...`);
+// Build multiple URL variants to maximize capture coverage
+function cdxVariants(domain,from,to){
+  const aliases=DOMAIN_ALIASES[domain]||[domain,`www.${domain}`];
+  const variants=[];
+  // For each alias: bare + wildcard
+  aliases.forEach(alias=>{
+    variants.push(`https://web.archive.org/cdx/search/cdx?url=${alias}&output=json&fl=timestamp,statuscode&from=${from}&to=${to}&limit=5000&filter=statuscode:200`);
+    variants.push(`https://web.archive.org/cdx/search/cdx?url=${alias}%2F*&output=json&fl=timestamp,statuscode&from=${from}&to=${to}&limit=3000&filter=statuscode:200`);
+  });
+  // Final fallback: relax status filter to catch 301/302 redirects
+  variants.push(`https://web.archive.org/cdx/search/cdx?url=${aliases[0]}&output=json&fl=timestamp,statuscode&from=${from}&to=${to}&limit=5000&filter=!statuscode:404`);
+  return variants;
+}
+
+async function tryFetch(url){
+  const proxied=[url,...PX.map(p=>p(url))];
+  for(const u of proxied){
     try{
-      const r=await fetch(urls[i],{signal:AbortSignal.timeout(14000)});
-      if(!r.ok)continue;
+      const r=await fetch(u,{signal:AbortSignal.timeout(16000)});
+      if(!r.ok) continue;
       const txt=await r.text();
-      if(!txt||txt.includes('<html')||txt.includes('<!DOCTYPE'))continue;
+      if(!txt||txt.length<10) continue;
+      if(txt.trim().startsWith('<')) continue; // HTML error page
       const j=JSON.parse(txt);
-      if(j[0]&&j[0][0]==='timestamp')j.shift();
       return j;
     }catch(e){continue;}
   }
-  return[];
+  return null;
+}
+
+async function fCDX(domain,from,to){
+  const variants=cdxVariants(domain,from,to);
+  let bestResult=[];
+  
+  for(let i=0;i<variants.length;i++){
+    sLS(`Variante ${i+1}/${variants.length}: ${domain.slice(0,22)}...`);
+    const j=await tryFetch(variants[i]);
+    if(!j) continue;
+    const rows=j.filter(r=>Array.isArray(r)&&r[0]!=='timestamp');
+    if(rows.length>bestResult.length){
+      bestResult=rows;
+      // If we got good data (>5 captures), use it and stop
+      if(rows.length>=5) break;
+    }
+  }
+  
+  // Deduplicate by date (keep unique days)
+  const seen=new Set();
+  const deduped=bestResult.filter(r=>{
+    const day=r[0].slice(0,8);
+    if(seen.has(day)) return false;
+    seen.add(day);
+    return true;
+  });
+  
+  return deduped.length>0?deduped:bestResult;
 }
 
 // Fetch list of available timestamps for a domain
 async function fTimestamps(domain){
-  const base=`https://web.archive.org/cdx/search/cdx?url=${domain}&output=json&fl=timestamp&limit=20&filter=statuscode:200&output=json`;
-  const urls=[base,...PX.map(p=>p(base))];
-  for(let i=0;i<urls.length;i++){
-    try{
-      const r=await fetch(urls[i],{signal:AbortSignal.timeout(12000)});
-      if(!r.ok)continue;
-      const txt=await r.text();
-      if(!txt||txt.includes('<html'))continue;
-      const j=JSON.parse(txt);
-      if(j[0]&&j[0][0]==='timestamp')j.shift();
-      return j.map(row=>row[0]).filter(Boolean);
-    }catch(e){continue;}
+  // Try multiple URL variants: bare, www, wildcard
+  const{from}=dr(180), {to}=dr(0);
+  const urlVariants=[
+    `https://web.archive.org/cdx/search/cdx?url=${domain}&output=json&fl=timestamp&limit=20&filter=statuscode:200&from=${from}&to=${to}`,
+    `https://web.archive.org/cdx/search/cdx?url=www.${domain}&output=json&fl=timestamp&limit=20&filter=statuscode:200&from=${from}&to=${to}`,
+    `https://web.archive.org/cdx/search/cdx?url=${domain}%2F*&output=json&fl=timestamp&limit=20&filter=statuscode:200&from=${from}&to=${to}`,
+    `https://web.archive.org/cdx/search/cdx?url=www.${domain}%2F*&output=json&fl=timestamp&limit=20&filter=statuscode:200&from=${from}&to=${to}`,
+  ];
+  let best=[];
+  for(const base of urlVariants){
+    if(best.length>=8) break;
+    for(const url of [base,...PX.map(p=>p(base))]){
+      try{
+        const r=await fetch(url,{signal:AbortSignal.timeout(12000)});
+        if(!r.ok)continue;
+        const txt=await r.text();
+        if(!txt||txt.includes('<html'))continue;
+        const j=JSON.parse(txt);
+        if(j[0]&&j[0][0]==='timestamp')j.shift();
+        const found=j.map(row=>Array.isArray(row)?row[0]:row).filter(Boolean);
+        if(found.length>best.length) best=found;
+        if(best.length>=8) break;
+      }catch(e){continue;}
+    }
   }
-  return[];
+  return best;
 }
 
 // Fetch actual HTML content from Wayback Machine
@@ -706,31 +776,80 @@ function extractZones(html){
   if(!html) return {};
   const parser=new DOMParser();
   const doc=parser.parseFromString(html,'text/html');
-  // Remove scripts, styles, wayback toolbar
-  ['script','style','#wm-ipp','#wm-ipp-base'].forEach(sel=>{
-    doc.querySelectorAll(sel).forEach(el=>el.remove());
+  
+  // Remove noise elements
+  const removeSelectors=['script','style','noscript','#wm-ipp','#wm-ipp-base',
+    '.wb-autocomplete-suggestions','.wayback-toolbar','#donato'];
+  removeSelectors.forEach(sel=>{
+    try{doc.querySelectorAll(sel).forEach(el=>el.remove());}catch(e){}
   });
-  const fullText=doc.body?.innerText||doc.body?.textContent||'';
+  
+  const body=doc.body;
+  if(!body) return {};
+  const fullText=(body.innerText||body.textContent||'').replace(/\s+/g,' ').trim();
+  
+  // Extract page title and meta description as additional signal
+  const title=doc.querySelector('title')?.textContent||'';
+  const metaDesc=doc.querySelector('meta[name="description"]')?.getAttribute('content')||'';
+  const metaKw=doc.querySelector('meta[name="keywords"]')?.getAttribute('content')||'';
+  const pageSignal=`${title} ${metaDesc} ${metaKw}`.toLowerCase();
+  
+  // Get ALL elements with class or id attributes for matching
+  const allElements=[...body.querySelectorAll('[class],[id],[data-section]')];
+  
   const zones={};
   ZONES.forEach(z=>{
-    // Find relevant sections by keywords
-    let content='';
-    // Try semantic elements first
-    const selectors=['main','article','section','[class*="'+z.id+'"]','[id*="'+z.id+'"]'];
+    let zoneContent='';
+    
+    // Strategy 1: Match by element class/id containing keywords
     z.keywords.forEach(kw=>{
-      const els=doc.querySelectorAll(`[class*="${kw}"],[id*="${kw}"],section`);
-      els.forEach(el=>{
-        const txt=(el.innerText||el.textContent||'').toLowerCase();
-        if(txt.includes(kw.toLowerCase())) content+=txt.slice(0,500);
-      });
+      try{
+        const matched=body.querySelectorAll(
+          `[class*="${kw}"i],[id*="${kw}"i],[data-section*="${kw}"i],` +
+          `section[aria-label*="${kw}"i],div[data-id*="${kw}"i]`
+        );
+        matched.forEach(el=>{
+          const txt=(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
+          if(txt.length>20) zoneContent+=txt.slice(0,600)+' ';
+        });
+      }catch(e){}
     });
-    // Fallback: extract lines containing keywords from full text
-    if(!content){
-      const lines=fullText.split('\n').filter(l=>z.keywords.some(kw=>l.toLowerCase().includes(kw)));
-      content=lines.slice(0,30).join(' ');
+    
+    // Strategy 2: Find semantic HTML5 sections
+    if(z.id==='banner'||z.id==='home'){
+      ['header','[role="banner"]','main > *:first-child','.container:first-of-type'].forEach(sel=>{
+        try{
+          const el=body.querySelector(sel);
+          if(el) zoneContent+=(el.innerText||el.textContent||'').replace(/\s+/g,' ').slice(0,800)+' ';
+        }catch(e){}
+      });
     }
-    zones[z.id]=content.replace(/\s+/g,' ').trim().slice(0,2000);
+    if(z.id==='footer'){
+      try{
+        const ft=body.querySelector('footer,[role="contentinfo"]');
+        if(ft) zoneContent+=(ft.innerText||ft.textContent||'').replace(/\s+/g,' ').slice(0,600)+' ';
+      }catch(e){}
+    }
+    
+    // Strategy 3: Scan full text for keyword context windows
+    const textLower=fullText.toLowerCase();
+    z.keywords.forEach(kw=>{
+      let idx=textLower.indexOf(kw.toLowerCase());
+      while(idx!==-1&&zoneContent.length<1500){
+        zoneContent+=fullText.slice(Math.max(0,idx-50),idx+300)+' ';
+        idx=textLower.indexOf(kw.toLowerCase(),idx+kw.length+200);
+      }
+    });
+    
+    // Strategy 4: Include page-level signal for all zones
+    if(pageSignal) zoneContent+=pageSignal+' ';
+    
+    // Normalize and store
+    zones[z.id]=zoneContent.replace(/\s+/g,' ').trim().slice(0,3000)||
+      // Last resort: extract text near zone keywords from full page
+      fullText.split(' ').filter(w=>z.keywords.some(k=>w.toLowerCase().includes(k))).join(' ').slice(0,500);
   });
+  
   return zones;
 }
 
