@@ -65,6 +65,7 @@ main{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:16px 16p
   background:rgba(255,255,255,.04);color:var(--g4);transition:all .18s;user-select:none}
 .chip.on{background:rgba(19,125,197,.18);border-color:var(--teal);color:var(--w)}
 .chip .cd{width:6px;height:6px;border-radius:50%}
+.chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent;position:relative;z-index:2}
 /* KPI */
 .kg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .kc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);
@@ -534,13 +535,16 @@ let BASELINES={}, CHANGELOG=[];
 // ══════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════
-(function(){
+document.addEventListener("DOMContentLoaded",function(){
   const w=document.getElementById('cw');
   UNIS.forEach(u=>{
     const c=document.createElement('div');
     c.className='chip'+(u.on?' on':'');c.dataset.d=u.d;
     c.innerHTML=`<span class="cd" style="background:${u.c}"></span>${u.d}`;
-    c.onclick=()=>c.classList.toggle('on');
+    c.addEventListener('click', function(e){ 
+      e.stopPropagation();
+      this.classList.toggle('on'); 
+    });
     w.appendChild(c);
   });
   // Load persisted data
@@ -548,7 +552,7 @@ let BASELINES={}, CHANGELOG=[];
   try{CHANGELOG=JSON.parse(localStorage.getItem(LSK_CL)||'[]');}catch(e){CHANGELOG=[];}
   updSnUI();
   populateChgDomains();
-})();
+});
 
 // ══════════════════════════════════════════════════════
 // TABS
@@ -1167,7 +1171,7 @@ function clearAll(){if(!confirm('¿Eliminar todos los snapshots?'))return;localS
 
 function updSnUI(){
   const snaps=gSnaps(),el=document.getElementById('scnt');
-  el.textContent=snaps.length>0?`💾 ${snaps.length} snapshot${snaps.length>1?'s':'`}`:'';
+  el.textContent=snaps.length>0?snaps.length+' snapshots guardados':'';
   const s=document.getElementById('cfg-ss');
   if(snaps.length>0){const l=snaps[0];
     s.innerHTML=`<div class="note" style="border-color:var(--gold)"><strong style="color:var(--gold2)">Último snapshot:</strong> ${l.dateLabel} · ${l.main} · ${l.period}</div>`;}
