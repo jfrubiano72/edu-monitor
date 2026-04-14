@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDU Monitor — Análisis de Dominios .edu.co</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B2545;--teal:#137DC5;--teal2:#1a9ae0;--gold:#C8963E;--gold2:#e0ab52;
+  --w:#fff;--g4:#94a3b8;--g6:#475569;--ok:#10b981;--warn:#f59e0b;--bad:#ef4444;--r:12px;
+  --fd:'DM Serif Display',Georgia,serif;--fb:'Plus Jakarta Sans',sans-serif;--fm:'DM Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--navy);color:var(--w);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:
+  radial-gradient(ellipse 80% 50% at 15% 15%,rgba(19,125,197,.18) 0%,transparent 60%),
+  radial-gradient(ellipse 60% 40% at 85% 85%,rgba(200,150,62,.1) 0%,transparent 50%);
+  pointer-events:none;z-index:0}
+header{position:sticky;top:0;z-index:50;padding:13px 20px;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(11,37,69,.93);backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:11px}
+.bi{width:36px;height:36px;background:linear-gradient(135deg,var(--teal),var(--gold));
+  border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.brand h1{font-family:var(--fd);font-size:18px;font-style:italic;line-height:1}
+.brand p{font-size:9px;color:var(--gold);font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.hr{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--g4)}
+.ld{width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.tabs{display:flex;gap:2px;padding:10px 20px 0;border-bottom:1px solid rgba(255,255,255,.07);
+  position:sticky;top:63px;z-index:40;background:rgba(11,37,69,.95);backdrop-filter:blur(8px);
+  overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:8px 15px;border-radius:8px 8px 0 0;font-size:11px;font-weight:700;cursor:pointer;
+  color:var(--g4);border:1px solid transparent;border-bottom:none;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--w);background:rgba(255,255,255,.05)}
+.tab.active{color:var(--w);background:rgba(19,125,197,.15);border-color:rgba(255,255,255,.1);border-bottom:2px solid var(--teal)}
+main{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:16px 16px 60px}
+.panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:var(--r);padding:18px 20px;margin-bottom:16px}
+.pt{font-family:var(--fd);font-size:14px;color:var(--gold);margin-bottom:12px}
+.cg2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg label{display:block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g4);margin-bottom:5px}
+.fg input,.fg select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);
+  border-radius:7px;padding:8px 11px;color:var(--w);font-family:var(--fm);font-size:12px;outline:none;transition:.2s}
+.fg input:focus,.fg select:focus{border-color:var(--teal);background:rgba(19,125,197,.12)}
+.fg select option{background:var(--navy)}
+.br{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+.btn{padding:9px 18px;border:none;border-radius:8px;font-family:var(--fb);font-size:12px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap}
+.bt{background:linear-gradient(135deg,var(--teal),#1588d8);color:#fff;box-shadow:0 4px 14px rgba(19,125,197,.35)}
+.bt:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(19,125,197,.5)}
+.bg{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);box-shadow:0 4px 14px rgba(200,150,62,.3)}
+.bg:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+.cw{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:16px;font-size:11px;
+  font-family:var(--fm);cursor:pointer;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);color:var(--g4);transition:all .18s;user-select:none}
+.chip.on{background:rgba(19,125,197,.18);border-color:var(--teal);color:var(--w)}
+.chip:hover{border-color:rgba(255,255,255,.28);color:var(--w)}
+.chip .cd{width:6px;height:6px;border-radius:50%}
+.kg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);
+  padding:16px 18px;position:relative;overflow:hidden;transition:.2s}
+.kc:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.14)}
+.kc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.ct::after{background:linear-gradient(90deg,var(--teal),transparent)}
+.cgo::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.cok::after{background:linear-gradient(90deg,var(--ok),transparent)}
+.cw2::after{background:linear-gradient(90deg,var(--warn),transparent)}
+.kl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g4);margin-bottom:5px}
+.kv{font-family:var(--fd);font-size:26px;line-height:1;margin-bottom:2px}
+.ks{font-size:10px;color:var(--g4)}
+.bdg{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;margin-top:4px}
+.up{background:rgba(16,185,129,.15);color:var(--ok)}
+.dn{background:rgba(239,68,68,.15);color:var(--bad)}
+.neu{background:rgba(245,158,11,.12);color:var(--warn)}
+.g23{display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:16px}
+.g22{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.g33{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.cc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:16px 18px}
+.cc h3{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g4);margin-bottom:2px}
+.cc h2{font-family:var(--fd);font-size:15px;color:var(--w);margin-bottom:12px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{padding:8px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--g4);border-bottom:1px solid rgba(255,255,255,.08)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s}
+tbody tr:hover{background:rgba(255,255,255,.03)}
+tbody tr.hl{background:rgba(19,125,197,.09)}
+tbody tr.hl td:first-child{color:var(--teal2);font-weight:700}
+td{padding:10px;color:var(--w);vertical-align:middle}
+.dc{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:11px}
+.ud{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.mb{height:5px;background:rgba(255,255,255,.07);border-radius:3px;min-width:70px}
+.mbf{height:100%;border-radius:3px;transition:width 1.2s ease}
+.tag{display:inline-flex;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+.hi{background:rgba(16,185,129,.15);color:var(--ok)}
+.md{background:rgba(245,158,11,.14);color:var(--warn)}
+.lo{background:rgba(239,68,68,.14);color:var(--bad)}
+.mn{font-family:var(--fm);font-size:11px;color:var(--g4)}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.sb{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 14px}
+.sl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g4);margin-bottom:7px}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:3px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.sr:last-child{border:none}
+.sr span:first-child{color:var(--g4)}
+.sr span:last-child{color:var(--w);font-family:var(--fm);font-size:11px}
+.ig{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.ins{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;
+  padding:13px 14px;display:flex;gap:10px;align-items:flex-start}
+.ins-i{font-size:20px;flex-shrink:0;margin-top:2px}
+.ins h4{font-size:12px;font-weight:700;color:var(--w);margin-bottom:3px}
+.ins p{font-size:11px;color:var(--g4);line-height:1.5}
+.ins.good{border-color:rgba(16,185,129,.25);background:rgba(16,185,129,.05)}
+.ins.warn{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.05)}
+.ins.bad{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.05)}
+.ins.info{border-color:rgba(19,125,197,.25);background:rgba(19,125,197,.05)}
+.tl{padding-left:18px;position:relative}
+.tl::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:rgba(255,255,255,.1)}
+.tli{position:relative;margin-bottom:12px;opacity:0;transform:translateX(-8px);transition:all .35s}
+.tli.vis{opacity:1;transform:translateX(0)}
+.tld{position:absolute;left:-14px;top:4px;width:8px;height:8px;border-radius:50%;border:2px solid var(--navy)}
+.tlt{font-family:var(--fm);font-size:10px;color:var(--gold);margin-bottom:2px}
+.tlx{font-size:11px;color:var(--g4);line-height:1.5}
+.tlx strong{color:var(--w)}
+.sdiv{display:flex;align-items:center;gap:10px;margin:20px 0 12px}
+.sdiv h2{font-family:var(--fd);font-size:17px;white-space:nowrap}
+.sdiv::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07)}
+.pb{height:7px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-top:5px}
+.pbf{height:100%;border-radius:4px;transition:width 1.2s ease}
+.note{font-size:11px;color:var(--g4);line-height:1.5;margin-bottom:12px;padding:8px 12px;
+  background:rgba(255,255,255,.03);border-left:2px solid var(--teal);border-radius:0 6px 6px 0}
+.note strong{color:var(--teal2)}
+#ov{position:fixed;inset:0;background:rgba(11,37,69,.94);z-index:200;display:none;
+  align-items:center;justify-content:center;flex-direction:column;gap:16px;backdrop-filter:blur(10px)}
+#ov.on{display:flex}
+.sp{width:42px;height:42px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--teal);
+  border-right-color:var(--gold);border-radius:50%;animation:spin .85s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#lm{font-family:var(--fm);font-size:12px;color:var(--g4)}
+.pb2{width:220px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.pb2f{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;transition:width .35s ease;width:0}
+#toast{position:fixed;bottom:18px;right:18px;background:rgba(239,68,68,.15);
+  border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:11px 14px;
+  font-size:12px;color:#fca5a5;max-width:320px;z-index:300;display:none;backdrop-filter:blur(8px)}
+#toast.on{display:block;animation:si .3s ease}
+@keyframes si{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.empty{text-align:center;padding:48px 20px;color:var(--g4)}
+.empty .ei{font-size:42px;opacity:.32;margin-bottom:12px}
+.empty h3{font-family:var(--fd);font-size:17px;margin-bottom:6px;color:var(--g4)}
+.empty p{font-size:12px;max-width:320px;margin:0 auto;line-height:1.6}
+@media(max-width:768px){
+  .kg{grid-template-columns:1fr 1fr}
+  .g23,.g22,.g33{grid-template-columns:1fr}
+  .sg{grid-template-columns:1fr}
+  .ig{grid-template-columns:1fr}
+  .cg2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="ov">
+  <div class="sp"></div>
+  <div id="lm">Iniciando...</div>
+  <div class="pb2"><div class="pb2f" id="pf"></div></div>
+  <div id="ls" style="font-size:10px;color:var(--g4);font-family:var(--fm);text-align:center;max-width:280px"></div>
+</div>
+<div id="toast"></div>
+
+<header>
+  <div class="brand">
+    <div class="bi">🎓</div>
+    <div><h1>EDU Monitor</h1><p>Dominios · Colombia · .edu.co</p></div>
+  </div>
+  <div class="hr"><div class="ld"></div><span id="lu">Sin análisis</span></div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="st('cfg')">⚙️ Configurar</div>
+  <div class="tab" onclick="st('res')">📊 Resumen</div>
+  <div class="tab" onclick="st('cmp')">🏆 Comparativa</div>
+  <div class="tab" onclick="st('est')">📈 Estadísticas</div>
+  <div class="tab" onclick="st('tl')">📅 Historial</div>
+</div>
+
+<main>
+
+<!-- ===== CONFIG ===== -->
+<div id="p-cfg">
+  <div style="height:14px"></div>
+  <div class="panel">
+    <div class="pt">🎯 Dominio Principal</div>
+    <div class="cg2">
+      <div class="fg"><label>Dominio</label><input id="md" value="unisalle.edu.co" placeholder="ej: unisalle.edu.co"></div>
+      <div class="fg"><label>Período</label>
+        <select id="per">
+          <option value="30">Últimos 30 días</option>
+          <option value="90" selected>Últimos 90 días</option>
+          <option value="180">Últimos 6 meses</option>
+          <option value="365">Último año</option>
+          <option value="730">Últimos 2 años</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="fg"><label>Competidores (toca para activar/desactivar)</label></div>
+      <div class="cw" id="chipsWrap"></div>
+    </div>
+    <div class="br">
+      <button class="btn bt" id="btnR" onclick="run()">🔍 Iniciar Análisis</button>
+      <button class="btn bg" id="btnC" onclick="expCSV()" disabled>📥 Exportar CSV</button>
+    </div>
+  </div>
+  <div class="note"><strong>Fuente:</strong> Wayback Machine CDX API (Internet Archive). El número de capturas es un proxy objetivo de la frecuencia de actualización del sitio. A mayor actividad de publicación, más capturas registra el archivo histórico.</div>
+  <div class="empty" id="empt"><div class="ei">🌐</div><h3>Listo para analizar</h3>
+    <p>Configura el dominio y competidores, luego presiona <strong style="color:var(--teal2)">Iniciar Análisis</strong>.</p></div>
+</div>
+
+<!-- ===== RESUMEN ===== -->
+<div id="p-res" style="display:none">
+  <div style="height:14px"></div>
+  <div class="kg">
+    <div class="kc ct"><div class="kl">Primera Captura</div><div class="kv" id="k1">—</div><div class="ks" id="k1s">—</div></div>
+    <div class="kc cgo"><div class="kl">Capturas Totales</div><div class="kv" id="k2">—</div><div class="ks" id="k2s">en el período</div></div>
+    <div class="kc cok"><div class="kl">Promedio Semanal</div><div class="kv" id="k3">—</div><div class="ks">capturas / semana</div></div>
+    <div class="kc cw2"><div class="kl">Posición vs. Comp.</div><div class="kv" id="k4">—</div><div class="ks" id="k4s">en actividad web</div></div>
+  </div>
+  <div class="g23">
+    <div class="cc"><h3>Evolución Temporal</h3><h2>Capturas por Semana — <span id="lm1">—</span></h2><canvas id="cWeek" height="200"></canvas></div>
+    <div class="cc"><h3>Distribución</h3><h2>Actividad por Día</h2><canvas id="cDow" height="200"></canvas></div>
+  </div>
+  <div class="g22">
+    <div class="cc"><h3>Tendencia Mensual</h3><h2>Capturas por Mes</h2><canvas id="cMon" height="200"></canvas></div>
+    <div class="cc"><h3>Intensidad Horaria</h3><h2>Distribución Horaria (UTC)</h2><canvas id="cHour" height="200"></canvas></div>
+  </div>
+  <div class="sdiv"><h2>💡 Hallazgos Clave</h2></div>
+  <div class="ig" id="igrid"></div>
+</div>
+
+<!-- ===== COMPARATIVA ===== -->
+<div id="p-cmp" style="display:none">
+  <div style="height:14px"></div>
+  <div class="g22">
+    <div class="cc"><h3>Ranking Total</h3><h2>Capturas por Institución</h2><canvas id="cRank" height="280"></canvas></div>
+    <div class="cc"><h3>Radar Comparativo</h3><h2>Perfil Multidimensional</h2><canvas id="cRadar" height="280"></canvas></div>
+  </div>
+  <div class="cc" style="margin-bottom:16px"><h3>Evolución Multi-dominio</h3><h2>Capturas Semanales — Todos los Dominios</h2><canvas id="cMulti" height="220"></canvas></div>
+  <div class="sdiv"><h2>📋 Tabla Comparativa Detallada</h2></div>
+  <div class="note">Ordenado por total de capturas en el período. <strong>Actividad Relativa</strong> = porcentaje respecto al dominio más activo del grupo.</div>
+  <div class="panel"><div class="tw">
+    <table><thead><tr>
+      <th>#</th><th>Institución</th><th>Total</th><th>Actividad Relativa</th>
+      <th>Prom/día</th><th>Prom/sem</th><th>Última Captura</th><th>Tendencia</th><th>Nivel</th>
+    </tr></thead><tbody id="tbody"></tbody></table>
+  </div></div>
+</div>
+
+<!-- ===== ESTADÍSTICAS ===== -->
+<div id="p-est" style="display:none">
+  <div style="height:14px"></div>
+  <div class="sdiv"><h2>📐 Estadística Descriptiva — <span id="lm2">—</span></h2></div>
+  <div class="sg" id="statg"></div>
+  <div class="g22">
+    <div class="cc"><h3>Distribución de Frecuencias</h3><h2>Histograma Capturas/Semana</h2><canvas id="cHist" height="220"></canvas></div>
+    <div class="cc"><h3>Análisis de Tendencia</h3><h2>Regresión Lineal + Datos Reales</h2><canvas id="cTrend" height="220"></canvas></div>
+  </div>
+  <div class="g33">
+    <div class="cc"><h3>Variación Semanal</h3><h2>Δ% Semana a Semana</h2><canvas id="cDelta" height="200"></canvas></div>
+    <div class="cc"><h3>Media Móvil</h3><h2>MA-4 Semanas</h2><canvas id="cMA" height="200"></canvas></div>
+    <div class="cc"><h3>La Salle vs. Competencia</h3><h2>Principal vs. Media Comp.</h2><canvas id="cVs" height="200"></canvas></div>
+  </div>
+  <div class="sdiv"><h2>🏅 Posición Competitiva</h2></div>
+  <div class="ig" id="rankCards"></div>
+</div>
+
+<!-- ===== HISTORIAL ===== -->
+<div id="p-tl" style="display:none">
+  <div style="height:14px"></div>
+  <div class="cc"><h3>Historial Reciente</h3><h2>Últimas Capturas — <span id="lm3">—</span></h2>
+    <div class="tl" id="tlc"></div>
+  </div>
+</div>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const UNIS=[
+  {d:'uniandes.edu.co',   n:'Uniandes',          c:'#1a9ae0', on:true },
+  {d:'urosario.edu.co',   n:'U. Rosario',         c:'#C8963E', on:true },
+  {d:'javeriana.edu.co',  n:'Javeriana',          c:'#10b981', on:true },
+  {d:'uexternado.edu.co', n:'Externado',          c:'#f59e0b', on:false},
+  {d:'ean.edu.co',        n:'EAN',                c:'#ef4444', on:false},
+  {d:'utadeo.edu.co',     n:'Tadeo Lozano',       c:'#8b5cf6', on:false},
+  {d:'unbosque.edu.co',   n:'U. del Bosque',      c:'#06b6d4', on:false},
+  {d:'usantotomas.edu.co',n:'Santo Tomás',        c:'#e879f9', on:true },
+  {d:'poligran.edu.co',   n:'Politécnico Gran',   c:'#fb923c', on:true },
+  {d:'unisabana.edu.co',  n:'U. de la Sabana',    c:'#34d399', on:true },
+  {d:'uniminuto.edu.co',  n:'Uniminuto',          c:'#f87171', on:true },
+  {d:'ecci.edu.co',       n:'U. ECCI',            c:'#a3e635', on:false},
+];
+const PROXIES=[
+  u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
+  u=>`https://thingproxy.freeboard.io/fetch/${u}`,
+];
+let S={}, CH={}, ran=false;
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+(function init(){
+  const w=document.getElementById('chipsWrap');
+  UNIS.forEach(u=>{
+    const c=document.createElement('div');
+    c.className='chip'+(u.on?' on':''); c.dataset.d=u.d;
+    c.innerHTML=`<span class="cd" style="background:${u.c}"></span>${u.d}`;
+    c.onclick=()=>c.classList.toggle('on');
+    w.appendChild(c);
+  });
+})();
+
+// ─────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────
+function st(name){
+  ['cfg','res','cmp','est','tl'].forEach(t=>{
+    document.getElementById('p-'+t).style.display='none';
+  });
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('p-'+name).style.display='block';
+  document.querySelectorAll('.tab').forEach(el=>{
+    if(el.getAttribute('onclick')===`st('${name}')`) el.classList.add('active');
+  });
+}
+
+// ─────────────────────────────────────────────
+// FETCH
+// ─────────────────────────────────────────────
+async function fetchCDX(domain,from,to){
+  const base=`https://web.archive.org/cdx/search/cdx?url=${domain}&output=json&fl=timestamp,statuscode&from=${from}&to=${to}&limit=5000&filter=statuscode:200`;
+  const urls=[base,...PROXIES.map(p=>p(base))];
+  for(let i=0;i<urls.length;i++){
+    setLS(`Proxy ${i+1}/${urls.length}: ${domain.slice(0,20)}...`);
+    try{
+      const r=await fetch(urls[i],{signal:AbortSignal.timeout(14000)});
+      if(!r.ok) continue;
+      const txt=await r.text();
+      if(!txt||txt.includes('<html')||txt.includes('<!DOCTYPE')) continue;
+      const j=JSON.parse(txt);
+      if(j[0]&&j[0][0]==='timestamp') j.shift();
+      return j;
+    }catch(e){continue;}
+  }
+  return [];
+}
+
+function dr(days){
+  const to=new Date(),from=new Date();
+  from.setDate(from.getDate()-days);
+  const f=d=>d.toISOString().replace(/[-:T]/g,'').slice(0,8);
+  return{from:f(from),to:f(to)};
+}
+
+// ─────────────────────────────────────────────
+// PROCESS
+// ─────────────────────────────────────────────
+function proc(rows,days){
+  if(!rows||!rows.length)
+    return{total:0,dailyAvg:0,weeklyAvg:0,byWeek:{},byDow:[0,0,0,0,0,0,0],
+           byMonth:{},byHour:Array(24).fill(0),events:[],first:null,last:null,
+           weekKeys:[],weekVals:[],stats:{mean:0,std:0,median:0,max:0,min:0,cv:0,n:0,slope:0},
+           trend:[],deltas:[],ma4:[]};
+  const bw={},bd=[0,0,0,0,0,0,0],bm={},bh=Array(24).fill(0),ev=[];
+  rows.forEach(r=>{
+    const ts=r[0],y=ts.slice(0,4),mo=ts.slice(4,6),d=ts.slice(6,8),h=+ts.slice(8,10);
+    const dt=new Date(`${y}-${mo}-${d}`);
+    const wk=wkey(dt), mk=`${y}-${mo}`;
+    bw[wk]=(bw[wk]||0)+1; bd[dt.getDay()]++; bm[mk]=(bm[mk]||0)+1; bh[h]++;
+    ev.push({ts,dateStr:`${d}/${mo}/${y}`,dateObj:dt});
+  });
+  const srt=ev.sort((a,b)=>a.ts.localeCompare(b.ts));
+  const wks=Object.keys(bw).sort(), wv=wks.map(w=>bw[w]);
+  const tot=rows.length;
+  const mean=wv.length?wv.reduce((a,b)=>a+b,0)/wv.length:0;
+  const vari=wv.length?wv.reduce((s,v)=>s+(v-mean)**2,0)/wv.length:0;
+  const std=Math.sqrt(vari);
+  const sv=[...wv].sort((a,b)=>a-b);
+  const med=sv.length?sv[Math.floor(sv.length/2)]:0;
+  const mx=Math.max(...wv,0), mn2=Math.min(...wv,0);
+  const cv=mean>0?(std/mean)*100:0;
+  const n=wv.length; let slope=0,icpt=0;
+  if(n>2){const xs=wv.map((_,i)=>i),xm=xs.reduce((a,b)=>a+b,0)/n,ym=mean;
+    const num=xs.reduce((s,x,i)=>s+(x-xm)*(wv[i]-ym),0);
+    const den=xs.reduce((s,x)=>s+(x-xm)**2,0);
+    slope=den?num/den:0; icpt=ym-slope*(xs.reduce((a,b)=>a+b,0)/n);}
+  const trend=wv.map((_,i)=>+(icpt+slope*i).toFixed(1));
+  const deltas=wv.map((v,i)=>i===0?0:+((v-(wv[i-1]||1))/(wv[i-1]||1)*100).toFixed(1));
+  const ma4=wv.map((_,i)=>{const sl=wv.slice(Math.max(0,i-3),i+1);return +(sl.reduce((a,b)=>a+b,0)/sl.length).toFixed(1);});
+  return{total:tot,dailyAvg:+(tot/days).toFixed(2),weeklyAvg:+(tot/(days/7)).toFixed(1),
+    byWeek:bw,byDow:bd,byMonth:bm,byHour:bh,
+    events:srt.slice(-30).reverse(),first:srt[0]?.dateStr||null,last:srt[srt.length-1]?.dateStr||null,
+    weekKeys:wks,weekVals:wv,stats:{mean:+mean.toFixed(2),std:+std.toFixed(2),median:med,max:mx,min:mn2,cv:+cv.toFixed(1),n,slope:+slope.toFixed(3)},
+    trend,deltas,ma4};
+}
+
+function wkey(d){
+  const dt=new Date(d); dt.setHours(0,0,0,0);
+  dt.setDate(dt.getDate()+4-(dt.getDay()||7));
+  const ys=new Date(dt.getFullYear(),0,1);
+  const wn=Math.ceil((((dt-ys)/86400000)+1)/7);
+  return`${dt.getFullYear()}-S${String(wn).padStart(2,'0')}`;
+}
+
+// ─────────────────────────────────────────────
+// RUN
+// ─────────────────────────────────────────────
+async function run(){
+  const main=document.getElementById('md').value.trim();
+  const days=+document.getElementById('per').value;
+  const comps=[...document.querySelectorAll('#chipsWrap .chip.on')].map(c=>c.dataset.d);
+  if(!main){toast('Ingresa un dominio principal');return;}
+  const all=[main,...comps.filter(c=>c!==main)];
+  const{from,to}=dr(days); S={}; ov(true); sp(5);
+  try{
+    for(let i=0;i<all.length;i++){
+      const d=all[i]; setLM(`Consultando ${d} (${i+1}/${all.length})`); sp(8+(i/all.length)*82);
+      S[d]=proc(await fetchCDX(d,from,to),days);
+    }
+    sp(96); setLM('Generando dashboards...');
+    await new Promise(r=>setTimeout(r,400));
+    render(main,comps,days);
+    sp(100); await new Promise(r=>setTimeout(r,300));
+    document.getElementById('btnC').disabled=false; ran=true;
+    document.getElementById('lu').textContent='Actualizado: '+new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
+    st('res');
+  }catch(e){toast('Error: '+e.message);}
+  finally{ov(false);}
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function render(main,comps,days){
+  const D=S[main]||{}, all=[main,...comps.filter(c=>c!==main)];
+  const un=n=>(UNIS.find(x=>x.d===n)||{n}).n||n;
+  const uc=n=>(UNIS.find(x=>x.d===n)||{c:'#94a3b8'}).c;
+  const ranked=all.map(d=>({d,...S[d]})).sort((a,b)=>(b.total||0)-(a.total||0));
+  const myR=ranked.findIndex(r=>r.d===main)+1;
+  const maxT=Math.max(...ranked.map(r=>r.total||0),1);
+  const cAvg=comps.length?comps.reduce((s,c)=>s+(S[c]?.weeklyAvg||0),0)/comps.length:0;
+
+  // Labels
+  ['lm1','lm2','lm3'].forEach(id=>document.getElementById(id).textContent=main);
+
+  // KPIs
+  document.getElementById('k1').textContent=D.first||'—';
+  document.getElementById('k1s').textContent=`Período: ${days} días`;
+  document.getElementById('k2').textContent=(D.total||0).toLocaleString('es-CO');
+  document.getElementById('k3').textContent=D.weeklyAvg||'0';
+  document.getElementById('k4').textContent=`#${myR}/${all.length}`;
+  document.getElementById('k4s').textContent=myR===1?'🥇 Líder':myR<=3?'🥈 Top 3':'en actividad';
+
+  // ── RESUMEN CHARTS ──
+  mk('cWeek','bar',{
+    labels:(D.weekKeys||[]).map(w=>w.replace('-S',' S')),
+    datasets:[{label:'Capturas/sem',data:D.weekVals||[],
+      backgroundColor:'rgba(19,125,197,.45)',borderColor:'#137DC5',borderWidth:1.5,borderRadius:4}]
+  },{bar:1});
+
+  mk('cDow','bar',{
+    labels:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
+    datasets:[{label:'Capturas',data:D.byDow||[0,0,0,0,0,0,0],
+      backgroundColor:(D.byDow||[]).map((_,i)=>i===0||i===6?'rgba(200,150,62,.5)':'rgba(19,125,197,.5)'),
+      borderColor:(D.byDow||[]).map((_,i)=>i===0||i===6?'#C8963E':'#137DC5'),
+      borderWidth:1.5,borderRadius:5}]
+  },{bar:1});
+
+  const mos=Object.keys(D.byMonth||{}).sort();
+  const MN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  mk('cMon','line',{
+    labels:mos.map(m=>{const[y,mo]=m.split('-');return MN[+mo-1]+' '+y;}),
+    datasets:[{label:'Capturas/mes',data:mos.map(m=>D.byMonth[m]),
+      borderColor:'#C8963E',backgroundColor:'rgba(200,150,62,.15)',fill:true,tension:0.4,pointRadius:4,pointBackgroundColor:'#C8963E'}]
+  },{line:1});
+
+  mk('cHour','bar',{
+    labels:Array.from({length:24},(_,i)=>i+':00'),
+    datasets:[{label:'Capturas',data:D.byHour||Array(24).fill(0),
+      backgroundColor:'rgba(16,185,129,.5)',borderColor:'#10b981',borderWidth:1,borderRadius:3}]
+  },{bar:1});
+
+  // Insights
+  const ig=document.getElementById('igrid'); ig.innerHTML='';
+  bldIns(D,main,cAvg,myR,all.length).forEach(i=>{
+    const div=document.createElement('div');
+    div.className=`ins ${i.t}`;
+    div.innerHTML=`<div class="ins-i">${i.icon}</div><div><h4>${i.title}</h4><p>${i.txt}</p></div>`;
+    ig.appendChild(div);
+  });
+
+  // ── COMPARATIVA ──
+  mk('cRank','bar',{
+    labels:ranked.map(r=>un(r.d)),
+    datasets:[{label:'Total capturas',data:ranked.map(r=>r.total||0),
+      backgroundColor:ranked.map(r=>uc(r.d)+'99'),borderColor:ranked.map(r=>uc(r.d)),borderWidth:2,borderRadius:6}]
+  },{bar:1,h:1});
+
+  const rdAll=all.map(d=>S[d]||{});
+  const mx2=[Math.max(...rdAll.map(r=>r.total||0),1),Math.max(...rdAll.map(r=>r.weeklyAvg||0),1),
+             Math.max(...rdAll.map(r=>Object.keys(r.byWeek||{}).length||0),1),
+             Math.max(...rdAll.map(r=>r.stats?.max||0),1),100];
+  mk('cRadar','radar',{
+    labels:['Total','Prom/sem','Semanas act.','Máx/sem','Consistencia'],
+    datasets:all.slice(0,7).map(d=>{
+      const r=S[d]||{},wks=Object.keys(r.byWeek||{}).length||0,cv=r.stats?.cv||0;
+      return{label:un(d),data:[
+        +((r.total||0)/mx2[0]*10).toFixed(1),+((r.weeklyAvg||0)/mx2[1]*10).toFixed(1),
+        +(wks/mx2[2]*10).toFixed(1),+((r.stats?.max||0)/mx2[3]*10).toFixed(1),
+        +((100-(cv>100?100:cv))/mx2[4]*10).toFixed(1)
+      ],borderColor:uc(d),backgroundColor:uc(d)+'22',pointBackgroundColor:uc(d),borderWidth:2};
+    })
+  },{radar:1});
+
+  const allWks=[...new Set(all.flatMap(d=>(S[d]?.weekKeys||[])))].sort();
+  mk('cMulti','line',{
+    labels:allWks.map(w=>w.replace('-S',' S')),
+    datasets:all.map(d=>({label:un(d),data:allWks.map(w=>(S[d]?.byWeek||{})[w]||0),
+      borderColor:uc(d),backgroundColor:'transparent',tension:0.35,pointRadius:2,
+      borderWidth:d===main?2.5:1.5,borderDash:d===main?[]:[5,3]}))
+  },{line:1});
+
+  // Table
+  const tb=document.getElementById('tbody'); tb.innerHTML='';
+  ranked.forEach((r,i)=>{
+    const pct=Math.round((r.total||0)/maxT*100);
+    const fq=ftag(r.dailyAvg||0), tr2=ttag(r.stats?.slope||0);
+    const tr=document.createElement('tr');
+    if(r.d===main) tr.classList.add('hl');
+    tr.innerHTML=`<td class="mn">${i+1}</td>
+      <td><div class="dc"><span class="ud" style="background:${uc(r.d)}"></span>
+        <div><div>${un(r.d)}</div><div style="font-size:10px;color:var(--g4)">${r.d}</div></div>
+        ${r.d===main?'<span class="bdg neu" style="margin-left:4px">Principal</span>':''}
+      </div></td>
+      <td><strong>${(r.total||0).toLocaleString('es-CO')}</strong></td>
+      <td><div style="display:flex;align-items:center;gap:7px">
+        <div class="mb" style="width:80px"><div class="mbf" style="width:${pct}%;background:${uc(r.d)}"></div></div>
+        <span class="mn">${pct}%</span></div></td>
+      <td class="mn">${r.dailyAvg||0}</td><td class="mn">${r.weeklyAvg||0}</td>
+      <td class="mn">${r.last||'—'}</td><td>${tr2}</td>
+      <td><span class="tag ${fq.c}">${fq.l}</span></td>`;
+    tb.appendChild(tr);
+  });
+
+  // ── ESTADÍSTICAS ──
+  const sg=document.getElementById('statg'); sg.innerHTML='';
+  [main,...comps].slice(0,6).forEach(d=>{
+    const r=S[d]||{},st2=r.stats||{};
+    const div=document.createElement('div'); div.className='sb';
+    div.innerHTML=`<div class="sl" style="color:${uc(d)}">${un(d)}</div>
+      ${sr('Media semanal',st2.mean||0)}${sr('Mediana semanal',st2.median||0)}
+      ${sr('Desv. estándar',st2.std||0)}${sr('Coef. variación %',st2.cv||0)}
+      ${sr('Máximo semanal',st2.max||0)}${sr('Mínimo semanal',st2.min||0)}
+      ${sr('Total período',r.total||0)}${sr('Tendencia slope',st2.slope||0)}`;
+    sg.appendChild(div);
+  });
+
+  // Histograma
+  const bins=bHist(D.weekVals||[]);
+  mk('cHist','bar',{
+    labels:bins.map(b=>b.l),
+    datasets:[{label:'Frecuencia',data:bins.map(b=>b.c),
+      backgroundColor:'rgba(19,125,197,.55)',borderColor:'#137DC5',borderWidth:1.5,borderRadius:4}]
+  },{bar:1,yl:'# semanas'});
+
+  // Trend
+  mk('cTrend','line',{
+    labels:(D.weekKeys||[]).map(w=>w.replace('-S',' S')),
+    datasets:[
+      {label:'Datos reales',data:D.weekVals||[],borderColor:'#137DC5',backgroundColor:'rgba(19,125,197,.1)',fill:true,tension:0.3,pointRadius:3},
+      {label:'Tendencia lineal',data:D.trend||[],borderColor:'#C8963E',borderDash:[6,3],pointRadius:0,borderWidth:2,fill:false,tension:0}
+    ]
+  },{line:1});
+
+  // Delta
+  mk('cDelta','bar',{
+    labels:(D.weekKeys||[]).slice(1).map(w=>w.replace('-S',' S')),
+    datasets:[{label:'Δ% semanal',data:(D.deltas||[]).slice(1),
+      backgroundColor:(D.deltas||[]).slice(1).map(v=>v>=0?'rgba(16,185,129,.55)':'rgba(239,68,68,.55)'),
+      borderColor:(D.deltas||[]).slice(1).map(v=>v>=0?'#10b981':'#ef4444'),
+      borderWidth:1.5,borderRadius:4}]
+  },{bar:1,yl:'%'});
+
+  // MA
+  mk('cMA','line',{
+    labels:(D.weekKeys||[]).map(w=>w.replace('-S',' S')),
+    datasets:[
+      {label:'Semana real',data:D.weekVals||[],borderColor:'rgba(19,125,197,.4)',pointRadius:2,tension:0.3,fill:false},
+      {label:'Media móvil 4s',data:D.ma4||[],borderColor:'#e0ab52',borderWidth:2.5,pointRadius:0,tension:0.5,fill:false}
+    ]
+  },{line:1});
+
+  // VS competencia
+  const mvs=allWks, mvD=mvs.map(w=>(S[main]?.byWeek||{})[w]||0);
+  const cMv=mvs.map(w=>{const v=comps.map(c=>(S[c]?.byWeek||{})[w]||0);return v.length?+(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1):0;});
+  mk('cVs','line',{
+    labels:mvs.map(w=>w.replace('-S',' S')),
+    datasets:[
+      {label:un(main),data:mvD,borderColor:'#137DC5',backgroundColor:'rgba(19,125,197,.15)',fill:true,tension:0.35,pointRadius:2},
+      {label:'Media competencia',data:cMv,borderColor:'#C8963E',borderDash:[5,3],pointRadius:0,borderWidth:2,fill:false,tension:0.35}
+    ]
+  },{line:1});
+
+  // Rank cards
+  const rc=document.getElementById('rankCards'); rc.innerHTML='';
+  ranked.forEach((r,i)=>{
+    const pct=maxT>0?Math.round((r.total||0)/maxT*100):0;
+    const tp=r.d===main?'info':i===0?'good':i>=ranked.length-2?'bad':'warn';
+    const icon=i===0?'🥇':i===1?'🥈':i===2?'🥉':'🏫';
+    const div=document.createElement('div'); div.className=`ins ${tp}`;
+    div.innerHTML=`<div class="ins-i">${icon}</div>
+      <div style="flex:1"><h4>${i+1}. ${un(r.d)} <span style="font-size:10px;color:var(--g4)">${r.d}</span></h4>
+      <p>${(r.total||0).toLocaleString('es-CO')} capturas · ${r.weeklyAvg||0}/sem · Última: ${r.last||'—'}</p>
+      <div class="pb" style="margin-top:5px"><div class="pbf" style="width:${pct}%;background:${uc(r.d)}"></div></div></div>`;
+    rc.appendChild(div);
+  });
+
+  // Timeline
+  const tlc=document.getElementById('tlc'); tlc.innerHTML='';
+  (S[main]?.events||[]).forEach((ev,i)=>{
+    const d=document.createElement('div'); d.className='tli'; d.style.transitionDelay=(i*30)+'ms';
+    d.innerHTML=`<div class="tld" style="background:${uc(main)}"></div>
+      <div class="tlt">${ev.dateStr} · ${ev.ts.slice(8,10)}:${ev.ts.slice(10,12)} UTC</div>
+      <div class="tlx"><strong>${main}</strong> capturado por Wayback Machine</div>`;
+    tlc.appendChild(d);
+    setTimeout(()=>d.classList.add('vis'),80+i*30);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHART FACTORY
+// ─────────────────────────────────────────────
+const TCFG={plugins:{legend:{labels:{color:'#94a3b8',font:{size:10},boxWidth:10}},
+  tooltip:{backgroundColor:'rgba(11,37,69,.95)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#fff',bodyColor:'#94a3b8',padding:10}}};
+
+function mk(id,type,data,opt={}){
+  if(CH[id]) CH[id].destroy();
+  const ctx=document.getElementById(id); if(!ctx) return;
+  let sc={};
+  if(type!=='radar'){
+    if(opt.h){sc.x={ticks:{color:'#475569'},grid:{color:'rgba(255,255,255,.05)'}};sc.y={ticks:{color:'#475569',font:{size:10}},grid:{display:false}};}
+    else{sc.x={ticks:{color:'#475569',font:{size:9},maxRotation:45},grid:{color:'rgba(255,255,255,.04)'}};
+      sc.y={ticks:{color:'#475569'},grid:{color:'rgba(255,255,255,.06)'},...(opt.yl?{title:{display:true,text:opt.yl,color:'#475569',font:{size:10}}}:{})};}
+  }
+  CH[id]=new Chart(ctx,{type,data,options:{responsive:true,maintainAspectRatio:true,indexAxis:opt.h?'y':'x',...TCFG,
+    scales:type==='radar'?{r:{ticks:{color:'#475569',backdropColor:'transparent',font:{size:9}},grid:{color:'rgba(255,255,255,.1)'},pointLabels:{color:'#94a3b8',font:{size:9}},suggestedMin:0,suggestedMax:10}}:sc}});
+}
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+function ftag(d){if(d>=5)return{c:'hi',l:'Alta'};if(d>=1)return{c:'md',l:'Media'};return{c:'lo',l:'Baja'};}
+function ttag(s){if(s>0.3)return'<span class="bdg up">▲ Creciendo</span>';if(s<-0.3)return'<span class="bdg dn">▼ Bajando</span>';return'<span class="bdg neu">→ Estable</span>';}
+function sr(l,v){return`<div class="sr"><span>${l}</span><span>${typeof v==='number'?v.toLocaleString('es-CO'):v}</span></div>`;}
+function bHist(vals){if(!vals.length)return[];const mn=Math.min(...vals),mx=Math.max(...vals);const nb=6,w=(mx-mn)/nb||1;const bk=Array.from({length:nb},(_,i)=>({l:`${+(mn+i*w).toFixed(0)}-${+(mn+(i+1)*w).toFixed(0)}`,c:0}));vals.forEach(v=>{const bi=Math.min(Math.floor((v-mn)/w),nb-1);bk[bi].c++;});return bk;}
+
+function bldIns(D,main,cAvg,rank,total){
+  const ins=[],W=D.weeklyAvg||0,s=D.stats||{};
+  if(rank===1) ins.push({t:'good',icon:'🏆',title:'Líder en actividad web',txt:`${main} lidera con ${(D.total||0).toLocaleString()} capturas en el período analizado.`});
+  else ins.push({t:rank<=3?'info':'warn',icon:rank<=3?'📈':'📊',title:`Posición #${rank} de ${total}`,txt:`Existen ${rank-1} institución(es) con mayor frecuencia de actualización web.`});
+  if(s.slope>0.3) ins.push({t:'good',icon:'📈',title:'Tendencia positiva',txt:`Actividad web con crecimiento de +${s.slope} capturas/semana. Buena señal de dinamismo digital.`});
+  else if(s.slope<-0.3) ins.push({t:'warn',icon:'📉',title:'Tendencia a la baja',txt:`La actividad disminuye ${Math.abs(s.slope)} capturas/semana. Revisar estrategia de publicación.`});
+  else ins.push({t:'info',icon:'➡️',title:'Actividad estable',txt:'La frecuencia de actualización se mantiene constante durante el período analizado.'});
+  if(cAvg>0){const r=(W/cAvg*100).toFixed(0);
+    ins.push(W>=cAvg?{t:'good',icon:'💪',title:`${r}% vs. media competencia`,txt:`Con ${W} capturas/sem supera el promedio de competidores (${cAvg.toFixed(1)}/sem).`}
+      :{t:'bad',icon:'⚠️',title:`Solo ${r}% vs. media competencia`,txt:`Con ${W} capturas/sem está bajo el promedio (${cAvg.toFixed(1)}/sem). Oportunidad de mejora.`});}
+  if(s.cv>60) ins.push({t:'warn',icon:'〰️',title:`Alta variabilidad (CV=${s.cv}%)`,txt:'La actividad web es irregular. Se recomienda estrategia de publicación más consistente.'});
+  else ins.push({t:'good',icon:'✅',title:`Actividad consistente (CV=${s.cv}%)`,txt:'La distribución de actualizaciones es uniforme a lo largo del período.'});
+  const di=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][(D.byDow||[]).indexOf(Math.max(...(D.byDow||[0])))];
+  ins.push({t:'info',icon:'📅',title:`Día más activo: ${di}`,txt:`Mayor concentración de capturas los ${di}. Posible día preferido de publicación/actualización.`});
+  return ins;
+}
+
+function expCSV(){
+  if(!ran){toast('Ejecuta el análisis primero');return;}
+  const lines=['\uFEFFDominio,Institución,Total,Prom Diario,Prom Semanal,Media Sem,Mediana,Desv.Std,CV%,Max/Sem,Slope,Primera,Última'];
+  Object.entries(S).forEach(([d,r])=>{const u=UNIS.find(x=>x.d===d);lines.push([d,u?u.n:d,r.total||0,r.dailyAvg||0,r.weeklyAvg||0,r.stats?.mean||0,r.stats?.median||0,r.stats?.std||0,r.stats?.cv||0,r.stats?.max||0,r.stats?.slope||0,r.first||'—',r.last||'—'].join(','));});
+  const main=document.getElementById('md').value.trim(), mD=S[main];
+  if(mD?.byWeek){lines.push('');lines.push(`Semana,Capturas ${main},Media Móvil 4s`);
+    (mD.weekKeys||[]).forEach((w,i)=>lines.push(`${w},${mD.weekVals[i]||0},${mD.ma4?.[i]||0}`));}
+  const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`edu_monitor_${main}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+function ov(b){document.getElementById('ov').classList.toggle('on',b);document.getElementById('btnR').disabled=b;}
+function sp(v){document.getElementById('pf').style.width=v+'%';}
+function setLM(m){document.getElementById('lm').textContent=m;}
+function setLS(m){document.getElementById('ls').textContent=m;}
+function toast(m){const t=document.getElementById('toast');t.textContent='⚠️ '+m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),5000);}
+</script>
+</body>
+</html>
